@@ -8,8 +8,11 @@
   --ink:#16212B;
   --ink-soft:#5B6672;
   --ink-faint:#8B95A0;
-  --navy:#12293D;
-  --navy-soft:#1D3A52;
+  
+  /* MENGUBAH WARNA UTAMA HEADER MENJADI HIJAU TUA (DEEP FOREST GREEN) */
+  --navy:#123324;
+  --navy-soft:#1D4A37;
+  
   --gold:#AD8A1E;
   --gold-soft:#F4EAC9;
   --emerald:#1F7A5C;
@@ -36,7 +39,7 @@
 }
 .mono{font-family:'IBM Plex Mono',monospace;}
 
-/* ---------- Header ---------- */
+/* ---------- Header Hijau Tua ---------- */
 .mtg-header{
   background:var(--navy);
   color:#fff;
@@ -48,26 +51,29 @@
 }
 .mtg-brand{display:flex; align-items:center; gap:12px;}
 .mtg-brand-mark{
-  width:40px;height:40px;border-radius:10px;
+  width:42px;height:42px;border-radius:10px;
   background:linear-gradient(135deg,var(--gold) 0%, #8a6d10 100%);
   display:flex;align-items:center;justify-content:center;
-  font-family:'Space Grotesk';font-weight:700;font-size:16px;color:var(--navy);
-  flex-shrink:0;
+  font-family:'Space Grotesk';font-weight:700;font-size:16px;color:#fff;
+  flex-shrink:0; box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+.mtg-brand-img{
+  height:42px; width:auto; max-width:120px; object-fit:contain; border-radius:8px;
 }
 .mtg-brand-title{font-size:20px;font-weight:700;color:#fff;}
-.mtg-brand-sub{font-size:12.5px;color:#9FB3C4;margin-top:2px;}
+.mtg-brand-sub{font-size:12.5px;color:#A2C9B6;margin-top:2px;}
 .mtg-balance-pill{
   background:rgba(255,255,255,0.08);
   border:1px solid rgba(255,255,255,0.14);
   border-radius:10px; padding:10px 16px; text-align:right;
 }
-.mtg-balance-pill .lbl{font-size:11px;color:#9FB3C4;text-transform:uppercase;letter-spacing:.05em;}
+.mtg-balance-pill .lbl{font-size:11px;color:#A2C9B6;text-transform:uppercase;letter-spacing:.05em;}
 .mtg-balance-pill .val{font-family:'IBM Plex Mono';font-size:20px;font-weight:600;color:#fff;margin-top:2px;}
 
 .mtg-tabs{display:flex;gap:4px;margin-top:20px;}
 .mtg-tab{
   padding:11px 18px; border-radius:10px 10px 0 0; cursor:pointer;
-  font-size:13.5px; font-weight:600; color:#9FB3C4; background:transparent;
+  font-size:13.5px; font-weight:600; color:#A2C9B6; background:transparent;
   border:none; transition:all .15s ease; display:flex; align-items:center; gap:7px;
 }
 .mtg-tab:hover{color:#fff; background:rgba(255,255,255,0.06);}
@@ -95,11 +101,11 @@
 }
 .mtg-filter-note{font-size:12px; color:var(--ink-faint); margin-left:auto;}
 
-/* ---------- KPI cards (Diubah Menjadi 5 Kolom) ---------- */
-.mtg-kpi-grid{display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-top:14px;}
+/* ---------- KPI cards ---------- */
+.mtg-kpi-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:14px;}
 .mtg-kpi-card{
   background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
-  padding:14px 16px; box-shadow:var(--shadow); position:relative; overflow:hidden;
+  padding:16px 18px; box-shadow:var(--shadow); position:relative; overflow:hidden;
 }
 .mtg-kpi-card::before{
   content:''; position:absolute; top:0; left:0; width:100%; height:3px;
@@ -108,8 +114,8 @@
 .mtg-kpi-card.keluar::before{background:var(--rust);}
 .mtg-kpi-card.selisih::before{background:var(--gold);}
 .mtg-kpi-card.saldo::before{background:var(--navy);}
-.mtg-kpi-label{font-size:11px; font-weight:600; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.03em;}
-.mtg-kpi-value{font-family:'IBM Plex Mono'; font-size:18px; font-weight:600; margin-top:6px; color:var(--ink);}
+.mtg-kpi-label{font-size:12px; font-weight:600; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.04em;}
+.mtg-kpi-value{font-family:'IBM Plex Mono'; font-size:22px; font-weight:600; margin-top:8px; color:var(--ink);}
 .mtg-kpi-value.neg{color:var(--rust);}
 
 /* ---------- Charts grid ---------- */
@@ -224,11 +230,10 @@ table.mtg-table tbody tr:last-child td{border-bottom:none;}
 }
 .mtg-icon-btn:hover{background:var(--surface-alt); color:var(--ink);}
 
-@media (max-width:1200px){
-  .mtg-kpi-grid{grid-template-columns:repeat(3,1fr);}
+@media (max-width:1100px){
   .mtg-summary-strip{grid-template-columns:repeat(3,1fr);}
 }
-@media (max-width:800px){
+@media (max-width:900px){
   .mtg-kpi-grid{grid-template-columns:repeat(2,1fr);}
   .mtg-chart-grid{grid-template-columns:1fr;}
   .mtg-form-grid{grid-template-columns:repeat(2,1fr);}
@@ -241,7 +246,9 @@ table.mtg-table tbody tr:last-child td{border-bottom:none;}
   <div class="mtg-header">
     <div class="mtg-header-top">
       <div class="mtg-brand">
-        <div class="mtg-brand-mark">MTG</div>
+        <!-- LOGO DENGAN GAMBAR (JIKA logo.png DITAMBAHKAN) / FALLBACK TERUBAH EMAS TEKS -->
+        <img src="logo.png" alt="Logo" class="mtg-brand-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="mtg-brand-mark" style="display:none;">MTG</div>
         <div>
           <div class="mtg-brand-title">Arus Kas MTG</div>
           <div class="mtg-brand-sub">Dashboard · Buku Kas · Canvassing Tracker</div>
@@ -276,7 +283,7 @@ const AKUN_LIST = ["BCA","Cash"];
 const CANV_KATEGORI = ["Keluar Rekening","Perjalanan","Makan & Minum","Penginapan","Lain-lain"];
 const CANV_METODE = ["BCA","Cash","Flazz/Tunai"];
 const KLAS_COLORS = {
-  "Canvassing":"#AD8A1E", "Perlengkapan & Aset Kantor":"#12293D", "Operasional Kantor":"#1F7A5C",
+  "Canvassing":"#AD8A1E", "Perlengkapan & Aset Kantor":"#123324", "Operasional Kantor":"#1F7A5C",
   "Transportasi & Kendaraan":"#B4472B", "Marketing & Branding":"#6B5CA5", "Konsumsi":"#2E86AB", "Lain-lain":"#8B95A0"
 };
 
@@ -412,7 +419,7 @@ async function saveTripsAndSync(){
   await saveLedger();
 }
 
-/* ---------------- Derived data & KPI Baru ---------------- */
+/* ---------------- Derived data & KPI ---------------- */
 function sortedLedger(){
   return [...state.ledger].sort((a,b) => a.tanggal < b.tanggal ? -1 : (a.tanggal > b.tanggal ? 1 : 0));
 }
@@ -444,7 +451,6 @@ function kpis(){
   
   const masuk = f.reduce((s,r) => s + (Number(r.masuk)||0), 0);
   const keluar = f.reduce((s,r) => s + (Number(r.keluar)||0), 0);
-  const selisihBulanIni = masuk - keluar; // Net Pengeluaran/Pemasukan bulan itu saja
 
   let saldoAwal = 0;
   let saldoAkhirPeriode = 0;
@@ -482,7 +488,7 @@ function kpis(){
     }
   }
 
-  return { masuk, keluar, selisihBulanIni, saldoAwal, saldoAkhirPeriode };
+  return { masuk, keluar, saldoAwal, saldoAkhirPeriode };
 }
 
 function monthlyTrend(){
@@ -592,9 +598,9 @@ function renderDashboard(){
       <div class="mtg-filter-note">Seluruh kartu, grafik, dan tabel di bawah otomatis mengikuti filter ini.</div>
     </div>
 
-    <!-- UPDATE 5 KARTU KPI LENGKAP -->
+    <!-- 4 KARTU KPI UTAMA -->
     <div class="mtg-kpi-grid">
-      <div class="mtg-kpi-card saldo">
+      <div class="mtg-kpi-card selisih">
         <div class="mtg-kpi-label">Saldo Awal Periode</div>
         <div class="mtg-kpi-value mono ${k.saldoAwal<0?'neg':''}">${fmtRp(k.saldoAwal)}</div>
       </div>
@@ -606,12 +612,8 @@ function renderDashboard(){
         <div class="mtg-kpi-label">Kas Keluar Periode</div>
         <div class="mtg-kpi-value mono">${fmtRp(k.keluar)}</div>
       </div>
-      <div class="mtg-kpi-card selisih">
-        <div class="mtg-kpi-label">Selisih Periode Ini</div>
-        <div class="mtg-kpi-value mono ${k.selisihBulanIni<0?'neg':''}">${fmtRp(k.selisihBulanIni)}</div>
-      </div>
       <div class="mtg-kpi-card saldo">
-        <div class="mtg-kpi-label">Saldo Akhir Kumulatif</div>
+        <div class="mtg-kpi-label">Saldo Akhir Periode</div>
         <div class="mtg-kpi-value mono ${k.saldoAkhirPeriode<0?'neg':''}">${fmtRp(k.saldoAkhirPeriode)}</div>
       </div>
     </div>
@@ -950,7 +952,7 @@ function drawTripCompareChart(totalsAll, retries = 0){
       data:{ labels: totalsAll.map(x=>x.trip.nama),
         datasets:[
           {label:'Tarik Tunai', data: totalsAll.map(x=>x.tot.ditarik), backgroundColor:'#AD8A1E88', borderRadius:4},
-          {label:'Total Pengeluaran Full', data: totalsAll.map(x=>x.tot.totalRealisasi), backgroundColor:'#12293D', borderRadius:4},
+          {label:'Total Pengeluaran Full', data: totalsAll.map(x=>x.tot.totalRealisasi), backgroundColor:'#123324', borderRadius:4},
         ]},
       options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'bottom', labels:{boxWidth:10,font:{size:11}}}},
         scales:{ y:{ ticks:{ callback:v=>fmtRp(v), font:{size:10} } } } }
@@ -1173,7 +1175,7 @@ function generateTripPDF(trip){
     const marginX = 40;
     let y = 50;
 
-    doc.setFont('helvetica','bold'); doc.setFontSize(16); doc.setTextColor(18,41,61);
+    doc.setFont('helvetica','bold'); doc.setFontSize(16); doc.setTextColor(18,51,36);
     doc.text('Rekap Canvassing — ' + trip.nama, marginX, y);
     y += 18;
     doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.setTextColor(90,100,110);
@@ -1197,22 +1199,22 @@ function generateTripPDF(trip){
       const bx = marginX + i*(boxW+6);
       doc.setFillColor(i===4 ? 236 : 244, i===4 ? 238 : 245, i===4 ? 232 : 240);
       doc.roundedRect(bx, y, boxW, boxH, 4, 4, 'F');
-      doc.setFont('helvetica','bold'); doc.setFontSize(7); doc.setTextColor(i===4 ? 18 : 91, i===4 ? 41 : 102, i===4 ? 61 : 114);
+      doc.setFont('helvetica','bold'); doc.setFontSize(7); doc.setTextColor(i===4 ? 18 : 91, i===4 ? 51 : 102, i===4 ? 36 : 114);
       doc.text(b[0].toUpperCase(), bx+6, y+16);
-      doc.setFont('helvetica','bold'); doc.setFontSize(9.5); doc.setTextColor(18,41,61);
+      doc.setFont('helvetica','bold'); doc.setFontSize(9.5); doc.setTextColor(18,51,36);
       doc.text(b[1], bx+6, y+34);
     });
     y += boxH + 22;
 
     if(katBreak.length){
-      doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(18,41,61);
+      doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(18,51,36);
       doc.text('Rincian per Kategori', marginX, y);
       doc.autoTable({
         startY: y+8, margin:{left:marginX, right:40},
         head:[['Kategori','Jumlah (IDR)']],
         body: katBreak.map(r => [r.kategori, fmtRp(r.jumlah)]),
         styles:{ font:'helvetica', fontSize:9, cellPadding:5 },
-        headStyles:{ fillColor:[18,41,61], textColor:255 },
+        headStyles:{ fillColor:[18,51,36], textColor:255 },
         columnStyles:{ 1:{ halign:'right' } },
         theme:'grid',
       });
@@ -1220,21 +1222,21 @@ function generateTripPDF(trip){
     }
 
     if(metBreak.length){
-      doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(18,41,61);
+      doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(18,51,36);
       doc.text('Rincian per Metode Pembayaran', marginX, y);
       doc.autoTable({
         startY: y+8, margin:{left:marginX, right:40},
         head:[['Metode','Jumlah (IDR)']],
         body: metBreak.map(r => [r.metode, fmtRp(r.jumlah)]),
         styles:{ font:'helvetica', fontSize:9, cellPadding:5 },
-        headStyles:{ fillColor:[18,41,61], textColor:255 },
+        headStyles:{ fillColor:[18,51,36], textColor:255 },
         columnStyles:{ 1:{ halign:'right' } },
         theme:'grid',
       });
       y = doc.lastAutoTable.finalY + 20;
     }
 
-    doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(18,41,61);
+    doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(18,51,36);
     doc.text('Rincian Transaksi', marginX, y);
     const rows = [...trip.expenses].sort((a,b)=> a.tanggal < b.tanggal ? -1 : (a.tanggal>b.tanggal?1:0));
     doc.autoTable({
@@ -1246,7 +1248,7 @@ function generateTripPDF(trip){
         e.realisasi ? fmtRp(e.realisasi) : '-',
       ]),
       styles:{ font:'helvetica', fontSize:8.5, cellPadding:4.5, overflow:'linebreak' },
-      headStyles:{ fillColor:[18,41,61], textColor:255, fontSize:8.5 },
+      headStyles:{ fillColor:[18,51,36], textColor:255, fontSize:8.5 },
       columnStyles:{ 4:{ halign:'right' }, 5:{ halign:'right' } },
       theme:'grid',
       didDrawPage: (data) => {
