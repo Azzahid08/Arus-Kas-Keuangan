@@ -1,0 +1,1324 @@
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
+
+:root{
+  --bg:#F4F5F0;
+  --surface:#FFFFFF;
+  --surface-alt:#ECEEE8;
+  --ink:#16212B;
+  --ink-soft:#5B6672;
+  --ink-faint:#8B95A0;
+  --navy:#12293D;
+  --navy-soft:#1D3A52;
+  --gold:#AD8A1E;
+  --gold-soft:#F4EAC9;
+  --emerald:#1F7A5C;
+  --emerald-soft:#E1F0E9;
+  --rust:#B4472B;
+  --rust-soft:#F6E4DD;
+  --border:#E0E3DB;
+  --radius:12px;
+  --shadow:0 1px 2px rgba(18,41,61,0.06), 0 4px 16px rgba(18,41,61,0.05);
+}
+*{box-sizing:border-box;}
+.mtg-app{
+  font-family:'Inter',system-ui,sans-serif;
+  color:var(--ink);
+  background:var(--bg);
+  min-height:100%;
+  padding:0;
+  line-height:1.4;
+}
+.mtg-app h1,.mtg-app h2,.mtg-app h3{
+  font-family:'Space Grotesk',system-ui,sans-serif;
+  margin:0;
+  letter-spacing:-0.01em;
+}
+.mono{font-family:'IBM Plex Mono',monospace;}
+
+/* ---------- Header ---------- */
+.mtg-header{
+  background:var(--navy);
+  color:#fff;
+  padding:22px 28px 0 28px;
+  border-radius:16px 16px 0 0;
+}
+.mtg-header-top{
+  display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap;
+}
+.mtg-brand{display:flex; align-items:center; gap:12px;}
+.mtg-brand-mark{
+  width:40px;height:40px;border-radius:10px;
+  background:linear-gradient(135deg,var(--gold) 0%, #8a6d10 100%);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Space Grotesk';font-weight:700;font-size:16px;color:var(--navy);
+  flex-shrink:0;
+}
+.mtg-brand-title{font-size:20px;font-weight:700;color:#fff;}
+.mtg-brand-sub{font-size:12.5px;color:#9FB3C4;margin-top:2px;}
+.mtg-balance-pill{
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.14);
+  border-radius:10px; padding:10px 16px; text-align:right;
+}
+.mtg-balance-pill .lbl{font-size:11px;color:#9FB3C4;text-transform:uppercase;letter-spacing:.05em;}
+.mtg-balance-pill .val{font-family:'IBM Plex Mono';font-size:20px;font-weight:600;color:#fff;margin-top:2px;}
+
+.mtg-tabs{display:flex;gap:4px;margin-top:20px;}
+.mtg-tab{
+  padding:11px 18px; border-radius:10px 10px 0 0; cursor:pointer;
+  font-size:13.5px; font-weight:600; color:#9FB3C4; background:transparent;
+  border:none; transition:all .15s ease; display:flex; align-items:center; gap:7px;
+}
+.mtg-tab:hover{color:#fff; background:rgba(255,255,255,0.06);}
+.mtg-tab.active{color:var(--navy); background:var(--bg);}
+
+/* ---------- Body ---------- */
+.mtg-body{padding:22px 28px 32px 28px;}
+.mtg-section-title{
+  font-size:15px; font-weight:600; color:var(--navy); margin:26px 0 12px 0;
+  display:flex; align-items:center; gap:8px;
+}
+.mtg-section-title .bar{width:4px;height:16px;background:var(--gold);border-radius:2px;display:inline-block;}
+.mtg-section-title:first-child{margin-top:0;}
+
+/* ---------- Filter bar ---------- */
+.mtg-filterbar{
+  background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+  padding:14px 18px; display:flex; align-items:center; gap:18px; flex-wrap:wrap; box-shadow:var(--shadow);
+}
+.mtg-filter-group{display:flex; align-items:center; gap:8px;}
+.mtg-filter-group label{font-size:12.5px; font-weight:600; color:var(--ink-soft);}
+.mtg-select{
+  border:1px solid var(--border); border-radius:8px; padding:7px 12px; font-size:13.5px;
+  font-family:'Inter'; background:#fff; color:var(--ink); font-weight:600; cursor:pointer;
+}
+.mtg-filter-note{font-size:12px; color:var(--ink-faint); margin-left:auto;}
+
+/* ---------- KPI cards (Diubah Menjadi 5 Kolom) ---------- */
+.mtg-kpi-grid{display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-top:14px;}
+.mtg-kpi-card{
+  background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+  padding:14px 16px; box-shadow:var(--shadow); position:relative; overflow:hidden;
+}
+.mtg-kpi-card::before{
+  content:''; position:absolute; top:0; left:0; width:100%; height:3px;
+}
+.mtg-kpi-card.masuk::before{background:var(--emerald);}
+.mtg-kpi-card.keluar::before{background:var(--rust);}
+.mtg-kpi-card.selisih::before{background:var(--gold);}
+.mtg-kpi-card.saldo::before{background:var(--navy);}
+.mtg-kpi-label{font-size:11px; font-weight:600; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.03em;}
+.mtg-kpi-value{font-family:'IBM Plex Mono'; font-size:18px; font-weight:600; margin-top:6px; color:var(--ink);}
+.mtg-kpi-value.neg{color:var(--rust);}
+
+/* ---------- Charts grid ---------- */
+.mtg-chart-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:14px;}
+.mtg-chart-card{
+  background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+  padding:16px 18px; box-shadow:var(--shadow);
+}
+.mtg-chart-card h4{font-size:13px; font-weight:600; color:var(--navy); margin-bottom:10px;}
+.chart-box{position:relative; height:230px; width:100%; display:flex; align-items:center; justify-content:center;}
+.chart-box canvas{max-height:none !important; width:100% !important;}
+
+/* ---------- Tables ---------- */
+.mtg-table-wrap{
+  background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+  box-shadow:var(--shadow); overflow:hidden;
+}
+.mtg-table-scroll{overflow-x:auto;}
+table.mtg-table{width:100%; border-collapse:collapse; font-size:13px;}
+table.mtg-table thead th{
+  background:var(--navy); color:#fff; text-align:left; padding:10px 14px; font-weight:600; font-size:11.5px;
+  text-transform:uppercase; letter-spacing:.03em; white-space:nowrap; position:sticky; top:0;
+}
+table.mtg-table tbody td{padding:9px 14px; border-bottom:1px solid var(--border); white-space:nowrap; color:var(--ink);}
+table.mtg-table tbody tr:hover{background:var(--surface-alt);}
+table.mtg-table tbody tr:last-child td{border-bottom:none;}
+.num{font-family:'IBM Plex Mono'; text-align:right; font-variant-numeric:tabular-nums;}
+.neg-row td.num.saldo-cell{color:var(--rust); font-weight:600;}
+.tag{
+  display:inline-block; padding:3px 9px; border-radius:99px; font-size:11px; font-weight:600;
+}
+.tag-masuk{background:var(--emerald-soft); color:var(--emerald);}
+.tag-keluar{background:var(--rust-soft); color:var(--rust);}
+.tag-awal{background:var(--gold-soft); color:var(--gold);}
+.klas-chip{
+  display:inline-block; padding:3px 9px; border-radius:6px; font-size:11px; font-weight:600;
+  background:var(--surface-alt); color:var(--navy-soft);
+}
+.rank-badge{
+  display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px;
+  border-radius:50%; background:var(--gold-soft); color:var(--gold); font-weight:700; font-size:11.5px;
+}
+
+/* ---------- Buttons ---------- */
+.mtg-btn{
+  border:none; border-radius:8px; padding:9px 16px; font-size:13px; font-weight:600; cursor:pointer;
+  font-family:'Inter'; display:inline-flex; align-items:center; gap:6px; transition:all .15s ease;
+}
+.mtg-btn-primary{background:var(--navy); color:#fff;}
+.mtg-btn-primary:hover{background:var(--navy-soft);}
+.mtg-btn-gold{background:var(--gold); color:#fff;}
+.mtg-btn-gold:hover{opacity:.9;}
+.mtg-btn-ghost{background:transparent; color:var(--ink-soft); border:1px solid var(--border);}
+.mtg-btn-ghost:hover{background:var(--surface-alt);}
+.mtg-btn-danger{background:transparent; color:var(--rust);}
+.mtg-btn-danger:hover{background:var(--rust-soft);}
+.mtg-btn-sm{padding:5px 10px; font-size:12px;}
+.mtg-btn:disabled{opacity:.45; cursor:not-allowed;}
+
+/* ---------- Forms ---------- */
+.mtg-form-card{
+  background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+  padding:18px; box-shadow:var(--shadow);
+}
+.mtg-form-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:12px;}
+.mtg-field{display:flex; flex-direction:column; gap:5px;}
+.mtg-field label{font-size:11.5px; font-weight:600; color:var(--ink-soft);}
+.mtg-input,.mtg-form-grid select{
+  border:1px solid var(--border); border-radius:8px; padding:8px 10px; font-size:13px;
+  font-family:'Inter'; background:#fff; color:var(--ink);
+}
+.mtg-input:focus,.mtg-form-grid select:focus{outline:2px solid var(--gold); outline-offset:1px;}
+.mtg-form-actions{display:flex; justify-content:flex-end; gap:8px; margin-top:14px;}
+
+/* ---------- Canvassing ---------- */
+.mtg-trip-grid{display:grid; grid-template-columns:260px 1fr; gap:16px; margin-top:14px; align-items:start;}
+.mtg-trip-list{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden;}
+.mtg-trip-item{
+  padding:13px 16px; border-bottom:1px solid var(--border); cursor:pointer; transition:background .15s ease;
+}
+.mtg-trip-item:last-child{border-bottom:none;}
+.mtg-trip-item:hover{background:var(--surface-alt);}
+.mtg-trip-item.active{background:var(--gold-soft); border-left:3px solid var(--gold);}
+.mtg-trip-item .nm{font-weight:600; font-size:13.5px; color:var(--navy);}
+.mtg-trip-item .pd{font-size:11.5px; color:var(--ink-faint); margin-top:2px;}
+.mtg-trip-item .sisa{font-size:11.5px; margin-top:3px; font-family:'IBM Plex Mono'; font-weight:600;}
+.mtg-trip-add{padding:12px 16px; text-align:center;}
+
+.mtg-empty{
+  text-align:center; padding:40px 20px; color:var(--ink-faint); font-size:13.5px;
+}
+.mtg-toolbar{display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:10px;}
+.mtg-summary-strip{display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-bottom:14px;}
+.mtg-summary-box{background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:12px 14px;}
+.mtg-summary-box .lbl{font-size:11px; font-weight:600; color:var(--ink-soft); text-transform:uppercase;}
+.mtg-summary-box .val{font-family:'IBM Plex Mono'; font-size:17px; font-weight:600; margin-top:4px;}
+.mtg-summary-box.highlight{border-color:var(--navy); background:var(--surface-alt);}
+
+.mtg-modal-overlay{
+  position:fixed; inset:0; background:rgba(18,41,61,0.45); display:flex; align-items:center; justify-content:center;
+  z-index:1000; padding:20px;
+}
+.mtg-modal{
+  background:#fff; border-radius:14px; padding:22px; width:100%; max-width:480px; box-shadow:0 20px 60px rgba(0,0,0,0.25);
+}
+.mtg-modal h3{font-size:16px; margin-bottom:4px;}
+.mtg-modal p{font-size:13px; color:var(--ink-soft); margin:0 0 16px 0;}
+
+.mtg-icon-btn{
+  background:transparent; border:none; cursor:pointer; padding:5px; border-radius:6px; color:var(--ink-faint);
+  display:inline-flex; align-items:center; justify-content:center;
+}
+.mtg-icon-btn:hover{background:var(--surface-alt); color:var(--ink);}
+
+@media (max-width:1200px){
+  .mtg-kpi-grid{grid-template-columns:repeat(3,1fr);}
+  .mtg-summary-strip{grid-template-columns:repeat(3,1fr);}
+}
+@media (max-width:800px){
+  .mtg-kpi-grid{grid-template-columns:repeat(2,1fr);}
+  .mtg-chart-grid{grid-template-columns:1fr;}
+  .mtg-form-grid{grid-template-columns:repeat(2,1fr);}
+  .mtg-trip-grid{grid-template-columns:1fr;}
+  .mtg-summary-strip{grid-template-columns:repeat(2,1fr) !important;}
+}
+</style>
+
+<div class="mtg-app" id="mtgApp">
+  <div class="mtg-header">
+    <div class="mtg-header-top">
+      <div class="mtg-brand">
+        <div class="mtg-brand-mark">MTG</div>
+        <div>
+          <div class="mtg-brand-title">Arus Kas MTG</div>
+          <div class="mtg-brand-sub">Dashboard · Buku Kas · Canvassing Tracker</div>
+        </div>
+      </div>
+      <div class="mtg-balance-pill">
+        <div class="lbl">Saldo Kas Saat Ini</div>
+        <div class="val mono" id="headerSaldo">Rp 0</div>
+      </div>
+    </div>
+    <div class="mtg-tabs" id="mtgTabs"></div>
+  </div>
+  <div class="mtg-body" id="mtgBody"></div>
+</div>
+
+<!-- UNPKG CDN UNTUK KESTABILAN PEMUATAN -->
+<script src="https://unpkg.com/chart.js@4.4.3/dist/chart.umd.js"></script>
+<script src="https://unpkg.com/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://unpkg.com/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
+
+<script>
+(function(){
+"use strict";
+
+const SEED_DATA = {"ledger": [{"tanggal": "2026-05-01", "kategori": "Kas Awal", "klasifikasi": "Modal Awal", "keterangan": "Setoran modal awal pemilik", "akun": "BCA", "masuk": 50000000.0, "keluar": 0}, {"tanggal": "2026-05-07", "kategori": "Pengeluaran", "klasifikasi": "Perlengkapan & Aset Kantor", "keterangan": "Tempat Sampah", "akun": "BCA", "masuk": 0, "keluar": 147000.0}, {"tanggal": "2026-05-07", "kategori": "Pengeluaran", "klasifikasi": "Perlengkapan & Aset Kantor", "keterangan": "Stop Kontak", "akun": "BCA", "masuk": 0, "keluar": 92000.0}, {"tanggal": "2026-05-07", "kategori": "Pengeluaran", "klasifikasi": "Perlengkapan & Aset Kantor", "keterangan": "Pewangi Ruangan", "akun": "BCA", "masuk": 0, "keluar": 81500.0}, {"tanggal": "2026-05-07", "kategori": "Pengeluaran", "klasifikasi": "Perlengkapan & Aset Kantor", "keterangan": "Plastik Sampah", "akun": "BCA", "masuk": 0, "keluar": 10500.0}, {"tanggal": "2026-05-07", "kategori": "Pengeluaran", "klasifikasi": "Perlengkapan & Aset Kantor", "keterangan": "Laptop", "akun": "BCA", "masuk": 0, "keluar": 10800000.0}, {"tanggal": "2026-05-07", "kategori": "Pengeluaran", "klasifikasi": "Perlengkapan & Aset Kantor", "keterangan": "CPU", "akun": "BCA", "masuk": 0, "keluar": 2100000.0}, {"tanggal": "2026-05-07", "kategori": "Pengeluaran", "klasifikasi": "Perlengkapan & Aset Kantor", "keterangan": "Handphone", "akun": "BCA", "masuk": 0, "keluar": 5600000.0}, {"tanggal": "2026-05-09", "kategori": "Pengeluaran", "klasifikasi": "Perlengkapan & Aset Kantor", "keterangan": "USB Wifi", "akun": "BCA", "masuk": 0, "keluar": 99000.0}, {"tanggal": "2026-05-09", "kategori": "Pengeluaran", "klasifikasi": "Perlengkapan & Aset Kantor", "keterangan": "Monitor CPU", "akun": "BCA", "masuk": 0, "keluar": 775000.0}, {"tanggal": "2026-05-10", "kategori": "Pengeluaran", "klasifikasi": "Perlengkapan & Aset Kantor", "keterangan": "Ananda Galon 2", "akun": "BCA", "masuk": 0, "keluar": 82000.0}, {"tanggal": "2026-05-10", "kategori": "Pengeluaran", "klasifikasi": "Perlengkapan & Aset Kantor", "keterangan": "Dispenser", "akun": "BCA", "masuk": 0, "keluar": 335000.0}, {"tanggal": "2026-05-10", "kategori": "Pengeluaran", "klasifikasi": "Perlengkapan & Aset Kantor", "keterangan": "Papan tulis dan ATK", "akun": "BCA", "masuk": 0, "keluar": 949500.0}, {"tanggal": "2026-05-12", "kategori": "Pengeluaran", "klasifikasi": "Transportasi & Kendaraan", "keterangan": "Angkut Barang", "akun": "BCA", "masuk": 0, "keluar": 150000.0}, {"tanggal": "2026-05-12", "kategori": "Pengeluaran", "klasifikasi": "Marketing & Branding", "keterangan": "Baju Polo", "akun": "BCA", "masuk": 0, "keluar": 786500.0}, {"tanggal": "2026-05-12", "kategori": "Pengeluaran", "klasifikasi": "Marketing & Branding", "keterangan": "Kain Bahan", "akun": "BCA", "masuk": 0, "keluar": 660000.0}, {"tanggal": "2026-05-14", "kategori": "Pengeluaran", "klasifikasi": "Operasional Kantor", "keterangan": "Wifi Checking (Teguh Suroso)", "akun": "BCA", "masuk": 0, "keluar": 100000.0}, {"tanggal": "2026-05-14", "kategori": "Pengeluaran", "klasifikasi": "Perlengkapan & Aset Kantor", "keterangan": "Mouse & Keyboard", "akun": "BCA", "masuk": 0, "keluar": 244000.0}, {"tanggal": "2026-05-13", "kategori": "Pengeluaran", "klasifikasi": "Perlengkapan & Aset Kantor", "keterangan": "Botol Ananda 220ml", "akun": "BCA", "masuk": 0, "keluar": 46000.0}, {"tanggal": "2026-05-17", "kategori": "Pengeluaran", "klasifikasi": "Perlengkapan & Aset Kantor", "keterangan": "Meteran Baju", "akun": "BCA", "masuk": 0, "keluar": 28000.0}, {"tanggal": "2026-05-17", "kategori": "Pengeluaran", "klasifikasi": "Perlengkapan & Aset Kantor", "keterangan": "Map Kertas, dll", "akun": "BCA", "masuk": 0, "keluar": 53000.0}, {"tanggal": "2026-05-13", "kategori": "Pengeluaran", "klasifikasi": "Transportasi & Kendaraan", "keterangan": "Bensin Tegal", "akun": "BCA", "masuk": 0, "keluar": 200000.0}, {"tanggal": "2026-05-16", "kategori": "Pengeluaran", "klasifikasi": "Transportasi & Kendaraan", "keterangan": "Tol PP", "akun": "BCA", "masuk": 0, "keluar": 157000.0}, {"tanggal": "2026-05-18", "kategori": "Pengeluaran", "klasifikasi": "Transportasi & Kendaraan", "keterangan": "Tol Berangkat", "akun": "BCA", "masuk": 0, "keluar": 78500.0}, {"tanggal": "2026-05-18", "kategori": "Pengeluaran", "klasifikasi": "Konsumsi", "keterangan": "Makan Siang Tegal", "akun": "BCA", "masuk": 0, "keluar": 75000.0}, {"tanggal": "2026-05-24", "kategori": "Pengeluaran", "klasifikasi": "Transportasi & Kendaraan", "keterangan": "Perpanjangan STNK Mobil Kantor", "akun": "BCA", "masuk": 0, "keluar": 4600000.0}, {"tanggal": "2026-05-24", "kategori": "Pengeluaran", "klasifikasi": "Transportasi & Kendaraan", "keterangan": "Pembelian Wipper", "akun": "BCA", "masuk": 0, "keluar": 180000.0}, {"tanggal": "2026-05-24", "kategori": "Pengeluaran", "klasifikasi": "Marketing & Branding", "keterangan": "Jahit Baju  + Bordir & Kartu Nama", "akun": "BCA", "masuk": 0, "keluar": 404000.0}, {"tanggal": "2026-05-25", "kategori": "Pengeluaran", "klasifikasi": "Canvassing", "keterangan": "Bensin Canvassing Batang", "akun": "BCA", "masuk": 0, "keluar": 100000.0}, {"tanggal": "2026-05-25", "kategori": "Pengeluaran", "klasifikasi": "Operasional Kantor", "keterangan": "Listrik Kantor", "akun": "BCA", "masuk": 0, "keluar": 503000.0}, {"tanggal": "2026-05-26", "kategori": "Pengeluaran", "klasifikasi": "Transportasi & Kendaraan", "keterangan": "Keperluan Mobil (Holder, Charger di mobil, dll)", "akun": "BCA", "masuk": 0, "keluar": 213000.0}, {"tanggal": "2026-05-30", "kategori": "Pengeluaran", "klasifikasi": "Transportasi & Kendaraan", "keterangan": "Bensin", "akun": "BCA", "masuk": 0, "keluar": 437880.0}, {"tanggal": "2026-05-31", "kategori": "Pengeluaran", "klasifikasi": "Perlengkapan & Aset Kantor", "keterangan": "Document Keeper", "akun": "BCA", "masuk": 0, "keluar": 175000.0}, {"tanggal": "2026-06-02", "kategori": "Pengeluaran", "klasifikasi": "Transportasi & Kendaraan", "keterangan": "Tol PP Pekalongan - Tegal", "akun": "BCA", "masuk": 0, "keluar": 157000.0}, {"tanggal": "2026-06-02", "kategori": "Pengeluaran", "klasifikasi": "Konsumsi", "keterangan": "Makan Siang Tegal 3 orang", "akun": "BCA", "masuk": 0, "keluar": 90000.0}, {"tanggal": "2026-06-02", "kategori": "Pengeluaran", "klasifikasi": "Transportasi & Kendaraan", "keterangan": "Service Mobil", "akun": "BCA", "masuk": 0, "keluar": 2504564.0}, {"tanggal": "2026-06-04", "kategori": "Pengeluaran", "klasifikasi": "Operasional Kantor", "keterangan": "Gemini Pro Juni", "akun": "BCA", "masuk": 0, "keluar": 85470.0}, {"tanggal": "2026-06-07", "kategori": "Pengeluaran", "klasifikasi": "Operasional Kantor", "keterangan": "Listrik Kantor 7 Juni 2026", "akun": "BCA", "masuk": 0, "keluar": 503000.0}, {"tanggal": "2026-06-08", "kategori": "Pengeluaran", "klasifikasi": "Perlengkapan & Aset Kantor", "keterangan": "keperluan Kantor(Kartu,Pewangi,Lem)", "akun": "BCA", "masuk": 0, "keluar": 87000.0}, {"tanggal": "2026-06-15", "kategori": "Pengeluaran", "klasifikasi": "Operasional Kantor", "keterangan": "Listrik Kantor 15 Juni 2026", "akun": "BCA", "masuk": 0, "keluar": 1003000.0}, {"tanggal": "2026-06-17", "kategori": "Pengeluaran", "klasifikasi": "Transportasi & Kendaraan", "keterangan": "Bensin", "akun": "BCA", "masuk": 0, "keluar": 300000.0}, {"tanggal": "2026-06-17", "kategori": "Pengeluaran", "klasifikasi": "Transportasi & Kendaraan", "keterangan": "Tol Pkl - Kendal", "akun": "BCA", "masuk": 0, "keluar": 91000.0}, {"tanggal": "2026-06-17", "kategori": "Pengeluaran", "klasifikasi": "Transportasi & Kendaraan", "keterangan": "Tol Kendal - PKL", "akun": "BCA", "masuk": 0, "keluar": 81500.0}, {"tanggal": "2026-06-18", "kategori": "Pengeluaran", "klasifikasi": "Operasional Kantor", "keterangan": "Sedia Kas Kantor(300k)", "akun": "Cash", "masuk": 0, "keluar": 31564.0}, {"tanggal": "2026-06-19", "kategori": "Pengeluaran", "klasifikasi": "Marketing & Branding", "keterangan": "Jasa design mobil", "akun": "BCA", "masuk": 0, "keluar": 150000.0}, {"tanggal": "2026-06-21", "kategori": "Pengeluaran", "klasifikasi": "Marketing & Branding", "keterangan": "Branding Mobil", "akun": "BCA", "masuk": 0, "keluar": 2000000.0}, {"tanggal": "2026-06-23", "kategori": "Pengeluaran", "klasifikasi": "Operasional Kantor", "keterangan": "Keperluan Kantor(Sapu,Serok,Pel)", "akun": "Cash", "masuk": 0, "keluar": 73000.0}, {"tanggal": "2026-06-27", "kategori": "Pengeluaran", "klasifikasi": "Operasional Kantor", "keterangan": "Perlengkapan kantor (Kopi, Gelas Plastik)", "akun": "Cash", "masuk": 0, "keluar": 21000.0}, {"tanggal": "2026-06-30", "kategori": "Pengeluaran", "klasifikasi": "Operasional Kantor", "keterangan": "Air galon kantor", "akun": "Cash", "masuk": 0, "keluar": 16000.0}, {"tanggal": "2026-07-01", "kategori": "Pengeluaran", "klasifikasi": "Transportasi & Kendaraan", "keterangan": "Tol Pkl - Tegal", "akun": "BCA", "masuk": 0, "keluar": 78500.0}, {"tanggal": "2026-07-01", "kategori": "Pengeluaran", "klasifikasi": "Transportasi & Kendaraan", "keterangan": "Tol Tegal - Pkl", "akun": "BCA", "masuk": 0, "keluar": 78500.0}, {"tanggal": "2026-07-02", "kategori": "Pengeluaran", "klasifikasi": "Operasional Kantor", "keterangan": "Listrik Kantor 2 Juli 2026", "akun": "BCA", "masuk": 0, "keluar": 503000.0}, {"tanggal": "2026-07-03", "kategori": "Pengeluaran", "klasifikasi": "Operasional Kantor", "keterangan": "Perlengkapan kantor (Staples + Isi Staples)", "akun": "Cash", "masuk": 0, "keluar": 47500.0}, {"tanggal": "2026-07-03", "kategori": "Pengeluaran", "klasifikasi": "Operasional Kantor", "keterangan": "Perlengkapan Kantor ( Cairan Pel, Permen)", "akun": "Cash", "masuk": 0, "keluar": 25100.0}, {"tanggal": "2026-07-04", "kategori": "Pengeluaran", "klasifikasi": "Transportasi & Kendaraan", "keterangan": "Bensin", "akun": "BCA", "masuk": 0, "keluar": 100000.0}, {"tanggal": "2026-07-04", "kategori": "Pemasukan", "klasifikasi": "Pemasukan Modal", "keterangan": "Kas Masuk", "akun": "BCA", "masuk": 25000000.0, "keluar": 0}, {"tanggal": "2026-07-04", "kategori": "Pengeluaran", "klasifikasi": "Operasional Kantor", "keterangan": "Kuota Internet an Haidar", "akun": "BCA", "masuk": 0, "keluar": 1000000.0}, {"tanggal": "2026-07-04", "kategori": "Pengeluaran", "klasifikasi": "Perlengkapan & Aset Kantor", "keterangan": "Rak Sepatu Kantor ", "akun": "Cash", "masuk": 0, "keluar": 50336.0}, {"tanggal": "2026-07-06", "kategori": "Pengeluaran", "klasifikasi": "Operasional Kantor", "keterangan": "Kuota Internet an Zahid", "akun": "BCA", "masuk": 0, "keluar": 40000.0}, {"tanggal": "2026-07-06", "kategori": "Pengeluaran", "klasifikasi": "Perlengkapan & Aset Kantor", "keterangan": "Lampu Kantor", "akun": "Cash", "masuk": 0, "keluar": 35500.0}, {"tanggal": "2026-07-09", "kategori": "Pengeluaran", "klasifikasi": "Operasional Kantor", "keterangan": "Gemini Pro Juli", "akun": "BCA", "masuk": 0, "keluar": 85470.0}, {"tanggal": "2026-07-11", "kategori": "Pengeluaran", "klasifikasi": "Operasional Kantor", "keterangan": "Sedia Kas Kantor (200)", "akun": "Cash", "masuk": 0, "keluar": 95000.0}, {"tanggal": "2026-07-11", "kategori": "Pengeluaran", "klasifikasi": "Operasional Kantor", "keterangan": "Tinta Hitam Printer", "akun": "Cash", "masuk": 0, "keluar": 95000.0}, {"tanggal": "2026-07-11", "kategori": "Pengeluaran", "klasifikasi": "Operasional Kantor", "keterangan": "Kirim Sampel Bahan ke Bandung", "akun": "Cash", "masuk": 0, "keluar": 10000.0}, {"tanggal": "2026-07-11", "kategori": "Pengeluaran", "klasifikasi": "Operasional Kantor", "keterangan": "Listrik Kantor 13 Juli 2026", "akun": "BCA", "masuk": 0, "keluar": 503000.0}, {"tanggal": "2026-07-14", "kategori": "Pengeluaran", "klasifikasi": "Operasional Kantor", "keterangan": "Kuota Internet an Husain", "akun": "BCA", "masuk": 0, "keluar": 27500.0}, {"tanggal": "2026-07-18", "kategori": "Pengeluaran", "klasifikasi": "Marketing & Branding", "keterangan": "Papan Bunga Toko Arafah Hasibuan Medan ", "akun": "BCA", "masuk": 0, "keluar": 250000.0}, {"tanggal": "2026-07-20", "kategori": "Pengeluaran", "klasifikasi": "Transportasi & Kendaraan", "keterangan": "Cuci Mobil", "akun": "BCA", "masuk": 0, "keluar": 80000.0}], "trips": [{"nama": "Jakarta dsk", "periode": "20 May - 22 May 2026", "expenses": [{"tanggal": "2026-05-20", "kategori": "Keluar Rekening", "keterangan": "Top Up", "metode": "BCA", "keluarRek": 650000.0, "realisasi": 0}, {"tanggal": "2026-05-20", "kategori": "Perjalanan", "keterangan": "Realisasi Tol", "metode": "Flazz/Tunai", "keluarRek": 0, "realisasi": 692000.0}, {"tanggal": "2026-05-20", "kategori": "Perjalanan", "keterangan": "Realisasi Bensin", "metode": "BCA", "keluarRek": 0, "realisasi": 903431.0}, {"tanggal": "2026-05-20", "kategori": "Perjalanan", "keterangan": "Pagi", "metode": "Cash", "keluarRek": 0, "realisasi": 100000.0}, {"tanggal": "2026-05-20", "kategori": "Penginapan", "keterangan": "Hotel H-1", "metode": "BCA", "keluarRek": 0, "realisasi": 330000.0}, {"tanggal": "2026-05-21", "kategori": "Penginapan", "keterangan": "Hotel H-2", "metode": "BCA", "keluarRek": 0, "realisasi": 470000.0}, {"tanggal": "2026-05-20", "kategori": "Lain-lain", "keterangan": "Beli Sarung Cendana", "metode": "BCA", "keluarRek": 0, "realisasi": 363500.0}, {"tanggal": "2026-05-20", "kategori": "Keluar Rekening", "keterangan": "Tarik Tunai", "metode": "Flazz/Tunai", "keluarRek": 1000000.0, "realisasi": 0}, {"tanggal": "2026-05-20", "kategori": "Makan & Minum", "keterangan": "Minum", "metode": "Cash", "keluarRek": 0, "realisasi": 27000.0}, {"tanggal": "2026-05-20", "kategori": "Makan & Minum", "keterangan": "Makan H-1", "metode": "Cash", "keluarRek": 0, "realisasi": 138000.0}, {"tanggal": "2026-05-21", "kategori": "Makan & Minum", "keterangan": "Makan H-2", "metode": "Cash", "keluarRek": 0, "realisasi": 150000.0}, {"tanggal": "2026-05-22", "kategori": "Makan & Minum", "keterangan": "Makan H-3", "metode": "Cash", "keluarRek": 0, "realisasi": 100000.0}, {"tanggal": "2026-05-20", "kategori": "Perjalanan", "keterangan": "Parkir H-1", "metode": "Cash", "keluarRek": 0, "realisasi": 15000.0}, {"tanggal": "2026-05-21", "kategori": "Perjalanan", "keterangan": "Parkir H-2", "metode": "Cash", "keluarRek": 0, "realisasi": 33000.0}, {"tanggal": "2026-05-22", "kategori": "Perjalanan", "keterangan": "Parkir H-3", "metode": "Cash", "keluarRek": 0, "realisasi": 27000.0}]}, {"nama": "Zona 4", "periode": "08 Jun - 12 Jun 2026", "expenses": [{"tanggal": "2025-06-08", "kategori": "Makan & Minum", "keterangan": "Makan H-1", "metode": "Cash", "keluarRek": 0, "realisasi": 261000.0}, {"tanggal": "2026-06-08", "kategori": "Perjalanan", "keterangan": "Bensin", "metode": "BCA", "keluarRek": 0, "realisasi": 383000.0}, {"tanggal": "2026-06-08", "kategori": "Penginapan", "keterangan": "Hotel H-1", "metode": "BCA", "keluarRek": 0, "realisasi": 413000.0}, {"tanggal": "2026-06-08", "kategori": "Perjalanan", "keterangan": "Parkir H-1", "metode": "Cash", "keluarRek": 0, "realisasi": 27000.0}, {"tanggal": "2026-06-08", "kategori": "Keluar Rekening", "keterangan": "Tarik Tunai", "metode": "BCA", "keluarRek": 1000000.0, "realisasi": 0}, {"tanggal": "2026-06-08", "kategori": "Makan & Minum", "keterangan": "Snack H-1", "metode": "Cash", "keluarRek": 0, "realisasi": 30400.0}, {"tanggal": "2026-06-09", "kategori": "Makan & Minum", "keterangan": "Makan H-2", "metode": "Cash", "keluarRek": 0, "realisasi": 193000.0}, {"tanggal": "2026-06-09", "kategori": "Makan & Minum", "keterangan": "Snack & Minum H-2", "metode": "Cash", "keluarRek": 0, "realisasi": 46700.0}, {"tanggal": "2026-06-09", "kategori": "Makan & Minum", "keterangan": "Snack & Minum H-2", "metode": "Cash", "keluarRek": 0, "realisasi": 9900.0}, {"tanggal": "2026-06-09", "kategori": "Perjalanan", "keterangan": "Parkir H-2", "metode": "Cash", "keluarRek": 0, "realisasi": 19000.0}, {"tanggal": "2026-06-09", "kategori": "Penginapan", "keterangan": "Hotel H-2", "metode": "BCA", "keluarRek": 0, "realisasi": 400000.0}, {"tanggal": "2026-06-10", "kategori": "Makan & Minum", "keterangan": "Makan H-3", "metode": "Cash", "keluarRek": 0, "realisasi": 269000.0}, {"tanggal": "2026-06-10", "kategori": "Perjalanan", "keterangan": "Parkir H-3", "metode": "Cash", "keluarRek": 0, "realisasi": 26000.0}, {"tanggal": "2026-06-10", "kategori": "Penginapan", "keterangan": "Hotel H-3", "metode": "BCA", "keluarRek": 0, "realisasi": 435000.0}, {"tanggal": "2026-06-10", "kategori": "Perjalanan", "keterangan": "Bensin H-3", "metode": "BCA", "keluarRek": 0, "realisasi": 300000.0}, {"tanggal": "2026-06-11", "kategori": "Makan & Minum", "keterangan": "Snack & Minum H-4", "metode": "Cash", "keluarRek": 0, "realisasi": 23820.0}, {"tanggal": "2026-06-11", "kategori": "Keluar Rekening", "keterangan": "Transfer ke Flazz", "metode": "BCA", "keluarRek": 0, "realisasi": 200000.0}, {"tanggal": "2026-06-11", "kategori": "Perjalanan", "keterangan": "Tol Brebes - Cirebon", "metode": "Flazz/Tunai", "keluarRek": 48000.0, "realisasi": 0}, {"tanggal": "2026-06-11", "kategori": "Makan & Minum", "keterangan": "Makan H-4", "metode": "Cash", "keluarRek": 0, "realisasi": 270000.0}, {"tanggal": "2026-06-11", "kategori": "Perjalanan", "keterangan": "Parkir H-4", "metode": "Cash", "keluarRek": 0, "realisasi": 33000.0}, {"tanggal": "2026-06-11", "kategori": "Penginapan", "keterangan": "Hotel H-4", "metode": "BCA", "keluarRek": 0, "realisasi": 410000.0}, {"tanggal": "2026-06-12", "kategori": "Makan & Minum", "keterangan": "Makan H-5", "metode": "Cash", "keluarRek": 0, "realisasi": 259000.0}, {"tanggal": "2026-06-12", "kategori": "Perjalanan", "keterangan": "Parkir H-5", "metode": "Cash", "keluarRek": 0, "realisasi": 31000.0}, {"tanggal": "2026-06-12", "kategori": "Perjalanan", "keterangan": "Tol Cirebon - Pekalongan", "metode": "Flazz/Tunai", "keluarRek": 128500.0, "realisasi": 0}]}, {"nama": "Zona 2", "periode": "22 Jun - 27 Jun 2026", "expenses": [{"tanggal": "2025-06-22", "kategori": "Keluar Rekening", "keterangan": "Tarik Tunai", "metode": "BCA", "keluarRek": 1000000.0, "realisasi": 0}, {"tanggal": "2026-06-22", "kategori": "Perjalanan", "keterangan": "Bensin", "metode": "BCA", "keluarRek": 0, "realisasi": 300000.0}, {"tanggal": "2026-06-22", "kategori": "Penginapan", "keterangan": "Hotel H -1", "metode": "BCA", "keluarRek": 0, "realisasi": 370000.0}, {"tanggal": "2026-06-22", "kategori": "Makan & Minum", "keterangan": "Makan H-1", "metode": "Cash", "keluarRek": 0, "realisasi": 200000.0}, {"tanggal": "2026-06-22", "kategori": "Makan & Minum", "keterangan": "Air H-1", "metode": "Cash", "keluarRek": 0, "realisasi": 28500.0}, {"tanggal": "2026-06-22", "kategori": "Perjalanan", "keterangan": "Parkir H-1", "metode": "Cash", "keluarRek": 0, "realisasi": 12000.0}, {"tanggal": "2026-06-23", "kategori": "Keluar Rekening", "keterangan": "Transfer ke Flazz", "metode": "BCA", "keluarRek": 0, "realisasi": 50000.0}, {"tanggal": "2026-06-23", "kategori": "Makan & Minum", "keterangan": "Makan H-2", "metode": "Cash", "keluarRek": 0, "realisasi": 270000.0}, {"tanggal": "2026-06-23", "kategori": "Makan & Minum", "keterangan": "Air minum H-2", "metode": "Cash", "keluarRek": 0, "realisasi": 34500.0}, {"tanggal": "2026-06-23", "kategori": "Perjalanan", "keterangan": "Parkir H-2", "metode": "Cash", "keluarRek": 0, "realisasi": 25000.0}, {"tanggal": "2026-06-23", "kategori": "Penginapan", "keterangan": "Hotel H-2", "metode": "BCA", "keluarRek": 0, "realisasi": 525000.0}, {"tanggal": "2026-06-24", "kategori": "Perjalanan", "keterangan": "Bensin", "metode": "BCA", "keluarRek": 0, "realisasi": 276000.0}, {"tanggal": "2026-06-24", "kategori": "Makan & Minum", "keterangan": "Makan H-3", "metode": "Cash", "keluarRek": 0, "realisasi": 197000.0}, {"tanggal": "2026-06-24", "kategori": "Penginapan", "keterangan": "Hotel H-3", "metode": "BCA", "keluarRek": 0, "realisasi": 635000.0}, {"tanggal": "2026-06-24", "kategori": "Perjalanan", "keterangan": "Parkir H-3", "metode": "Cash", "keluarRek": 0, "realisasi": 21000.0}, {"tanggal": "2026-06-25", "kategori": "Penginapan", "keterangan": "Hotel H-4", "metode": "BCA", "keluarRek": 0, "realisasi": 435600.0}, {"tanggal": "2026-06-25", "kategori": "Makan & Minum", "keterangan": "Makan H-4", "metode": "Cash", "keluarRek": 0, "realisasi": 166000.0}, {"tanggal": "2026-06-25", "kategori": "Perjalanan", "keterangan": "Parkir H-4", "metode": "Cash", "keluarRek": 0, "realisasi": 6000.0}, {"tanggal": "2026-06-26", "kategori": "Perjalanan", "keterangan": "Bensin", "metode": "Cash", "keluarRek": 0, "realisasi": 368100.0}, {"tanggal": "2026-06-26", "kategori": "Penginapan", "keterangan": "Hotel H-5", "metode": "BCA", "keluarRek": 0, "realisasi": 463500.0}, {"tanggal": "2026-06-26", "kategori": "Makan & Minum", "keterangan": "Makan H-5", "metode": "Cash", "keluarRek": 0, "realisasi": 125000.0}, {"tanggal": "2026-06-27", "kategori": "Keluar Rekening", "keterangan": "Transfer ke Flazz", "metode": "BCA", "keluarRek": 0, "realisasi": 150000.0}, {"tanggal": "2026-06-27", "kategori": "Makan & Minum", "keterangan": "Makan  H-6", "metode": "Cash", "keluarRek": 0, "realisasi": 216500.0}, {"tanggal": "2026-06-27", "kategori": "Makan & Minum", "keterangan": "Snack H-6", "metode": "Cash", "keluarRek": 0, "realisasi": 19000.0}, {"tanggal": "2026-06-27", "kategori": "Makan & Minum", "keterangan": "Air minum H-6", "metode": "Cash", "keluarRek": 0, "realisasi": 28500.0}, {"tanggal": "2026-06-27", "kategori": "Perjalanan", "keterangan": "Parkir H-6", "metode": "Cash", "keluarRek": 0, "realisasi": 18000.0}, {"tanggal": "2026-06-27", "kategori": "Perjalanan", "keterangan": "Cuci mobil", "metode": "BCA", "keluarRek": 0, "realisasi": 80000.0}]}, {"nama": "Zona 3", "periode": "05 Jul - 09 Jul 2026", "expenses": [{"tanggal": "2026-07-05", "kategori": "Keluar Rekening", "keterangan": "Tarik Tunai", "metode": "BCA", "keluarRek": 1500000.0, "realisasi": 0}, {"tanggal": "2026-07-05", "kategori": "Perjalanan", "keterangan": "Bensin", "metode": "BCA", "keluarRek": 0, "realisasi": 358000.0}, {"tanggal": "2026-07-06", "kategori": "Keluar Rekening", "keterangan": "Transfer ke Flazz", "metode": "BCA", "keluarRek": 0, "realisasi": 50000.0}, {"tanggal": "2026-07-06", "kategori": "Makan & Minum", "keterangan": "Makan H-1", "metode": "Cash", "keluarRek": 0, "realisasi": 152000.0}, {"tanggal": "2026-07-06", "kategori": "Makan & Minum", "keterangan": "Minum H-1", "metode": "Cash", "keluarRek": 0, "realisasi": 20000.0}, {"tanggal": "2026-07-06", "kategori": "Perjalanan", "keterangan": "Parkir H-1", "metode": "Cash", "keluarRek": 0, "realisasi": 11000.0}, {"tanggal": "2026-07-06", "kategori": "Penginapan", "keterangan": "Hotel H-1", "metode": "BCA", "keluarRek": 0, "realisasi": 481084.0}, {"tanggal": "2026-07-07", "kategori": "Makan & Minum", "keterangan": "Makan H-2", "metode": "Cash", "keluarRek": 0, "realisasi": 255000.0}, {"tanggal": "2026-07-07", "kategori": "Perjalanan", "keterangan": "Parkir H-2", "metode": "Cash", "keluarRek": 0, "realisasi": 28000.0}, {"tanggal": "2026-07-07", "kategori": "Penginapan", "keterangan": "Hotel H-2", "metode": "BCA", "keluarRek": 0, "realisasi": 400000.0}, {"tanggal": "2026-07-07", "kategori": "Perjalanan", "keterangan": "Bensin", "metode": "BCA", "keluarRek": 0, "realisasi": 326100.0}, {"tanggal": "2026-07-08", "kategori": "Makan & Minum", "keterangan": "Makan H-3", "metode": "Cash", "keluarRek": 0, "realisasi": 139000.0}, {"tanggal": "2026-07-08", "kategori": "Perjalanan", "keterangan": "Parkir H-3", "metode": "Cash", "keluarRek": 0, "realisasi": 33000.0}, {"tanggal": "2026-07-08", "kategori": "Penginapan", "keterangan": "Hotel H-3", "metode": "BCA", "keluarRek": 0, "realisasi": 350000.0}, {"tanggal": "2026-07-09", "kategori": "Perjalanan", "keterangan": "Transfer ke Flazz", "metode": "BCA", "keluarRek": 0, "realisasi": 50000.0}, {"tanggal": "2026-07-09", "kategori": "Makan & Minum", "keterangan": "Makan H-4", "metode": "Cash", "keluarRek": 0, "realisasi": 146000.0}, {"tanggal": "2026-07-09", "kategori": "Perjalanan", "keterangan": "Parkir H-4", "metode": "Cash", "keluarRek": 0, "realisasi": 17000.0}]}, {"nama": "Zona 1", "periode": "11 Jul - 16 Jul 2026", "expenses": [{"tanggal": "2026-07-11", "kategori": "Perjalanan", "keterangan": "Bensin", "metode": "BCA", "keluarRek": 0, "realisasi": 400100.0}, {"tanggal": "2026-07-13", "kategori": "Keluar Rekening", "keterangan": "Tarik Tunai", "metode": "BCA", "keluarRek": 1160000.0, "realisasi": 0}, {"tanggal": "2026-07-13", "kategori": "Makan & Minum", "keterangan": "Makan H-1", "metode": "Cash", "keluarRek": 0, "realisasi": 181000.0}, {"tanggal": "2026-07-13", "kategori": "Perjalanan", "keterangan": "Parkir H-1", "metode": "Cash", "keluarRek": 0, "realisasi": 24000.0}, {"tanggal": "2026-07-13", "kategori": "Makan & Minum", "keterangan": "Air Mineral", "metode": "Cash", "keluarRek": 0, "realisasi": 22000.0}, {"tanggal": "2026-07-13", "kategori": "Penginapan", "keterangan": "Hotel H-1", "metode": "BCA", "keluarRek": 0, "realisasi": 450000.0}, {"tanggal": "2026-07-14", "kategori": "Makan & Minum", "keterangan": "Makan H-2", "metode": "Cash", "keluarRek": 0, "realisasi": 189000.0}, {"tanggal": "2026-07-14", "kategori": "Perjalanan", "keterangan": "Parkir H-2", "metode": "Cash", "keluarRek": 0, "realisasi": 21000.0}, {"tanggal": "2026-07-14", "kategori": "Penginapan", "keterangan": "Hotel H-2", "metode": "BCA", "keluarRek": 0, "realisasi": 300000.0}, {"tanggal": "2026-07-15", "kategori": "Perjalanan", "keterangan": "Bensin", "metode": "BCA", "keluarRek": 0, "realisasi": 358000.0}, {"tanggal": "2026-07-15", "kategori": "Makan & Minum", "keterangan": "Makan H-3", "metode": "Cash", "keluarRek": 0, "realisasi": 256000.0}, {"tanggal": "2026-07-15", "kategori": "Perjalanan", "keterangan": "Parkir H-3", "metode": "Cash", "keluarRek": 0, "realisasi": 23000.0}, {"tanggal": "2026-07-15", "kategori": "Penginapan", "keterangan": "Hotel H-3", "metode": "BCA", "keluarRek": 0, "realisasi": 240000.0}, {"tanggal": "2026-07-16", "kategori": "Perjalanan", "keterangan": "Transfer ke Flazz", "metode": "BCA", "keluarRek": 0, "realisasi": 250000.0}, {"tanggal": "2026-07-16", "kategori": "Makan & Minum", "keterangan": "Makan H-4", "metode": "Cash", "keluarRek": 0, "realisasi": 190000.0}, {"tanggal": "2026-07-16", "kategori": "Perjalanan", "keterangan": "Parkir H-4", "metode": "Cash", "keluarRek": 0, "realisasi": 16000.0}, {"tanggal": "2026-07-16", "kategori": "Perjalanan", "keterangan": "Transfer ke Flazz", "metode": "BCA", "keluarRek": 0, "realisasi": 140000.0}]}, {"nama": "Zona 5", "periode": "20 Jul - 22 Jul 2026", "expenses": [{"tanggal": "2026-07-20", "kategori": "Perjalanan", "keterangan": "Tarik Tunai", "metode": "BCA", "keluarRek": 1000000.0, "realisasi": 0}, {"tanggal": "2026-07-20", "kategori": "Perjalanan", "keterangan": "Transfer Flazz", "metode": "BCA", "keluarRek": 0, "realisasi": 250000.0}, {"tanggal": "2026-07-20", "kategori": "Perjalanan", "keterangan": "Transfer Flazz", "metode": "BCA", "keluarRek": 0, "realisasi": 50000.0}, {"tanggal": "2026-07-20", "kategori": "Makan & Minum", "keterangan": "Makan H-1", "metode": "Cash", "keluarRek": 0, "realisasi": 170000.0}, {"tanggal": "2026-07-20", "kategori": "Makan & Minum", "keterangan": "Minum H-1", "metode": "Cash", "keluarRek": 0, "realisasi": 22000.0}, {"tanggal": "2026-07-20", "kategori": "Perjalanan", "keterangan": "Parkir H-1", "metode": "Cash", "keluarRek": 0, "realisasi": 8000.0}, {"tanggal": "2026-07-20", "kategori": "Penginapan", "keterangan": "Hotel H-1", "metode": "BCA", "keluarRek": 0, "realisasi": 230000.0}, {"tanggal": "2026-07-21", "kategori": "Makan & Minum", "keterangan": "Makan H-2", "metode": "Cash", "keluarRek": 0, "realisasi": 245000.0}, {"tanggal": "2026-07-21", "kategori": "Perjalanan", "keterangan": "Parkir H-2", "metode": "Cash", "keluarRek": 0, "realisasi": 19000.0}, {"tanggal": "2026-07-21", "kategori": "Penginapan", "keterangan": "Hotel H-2", "metode": "BCA", "keluarRek": 0, "realisasi": 380000.0}, {"tanggal": "2026-07-22", "kategori": "Perjalanan", "keterangan": "Bensin H-3", "metode": "BCA", "keluarRek": 0, "realisasi": 365030.0}]}]};
+
+const MONTHS = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+const KATEGORI_LIST = ["Kas Awal","Pemasukan","Pengeluaran"];
+const KLASIFIKASI_LIST = ["Modal Awal","Pemasukan Modal","Canvassing","Perlengkapan & Aset Kantor","Operasional Kantor","Transportasi & Kendaraan","Marketing & Branding","Konsumsi","Lain-lain"];
+const KLAS_EXPENSE_ONLY = KLASIFIKASI_LIST.filter(k => k !== "Modal Awal" && k !== "Pemasukan Modal");
+const AKUN_LIST = ["BCA","Cash"];
+const CANV_KATEGORI = ["Keluar Rekening","Perjalanan","Makan & Minum","Penginapan","Lain-lain"];
+const CANV_METODE = ["BCA","Cash","Flazz/Tunai"];
+const KLAS_COLORS = {
+  "Canvassing":"#AD8A1E", "Perlengkapan & Aset Kantor":"#12293D", "Operasional Kantor":"#1F7A5C",
+  "Transportasi & Kendaraan":"#B4472B", "Marketing & Branding":"#6B5CA5", "Konsumsi":"#2E86AB", "Lain-lain":"#8B95A0"
+};
+
+let state = {
+  ledger: [],
+  trips: [],
+  activeTab: "dashboard",
+  filterYear: 2026,
+  filterMonth: "Semua",
+  activeTripId: null,
+  editingTxnId: null,
+  editingTripExpenseId: null,
+  confirmDelete: null,
+};
+
+let chartRegistry = {};
+
+function uid(){ return 'id_' + Math.random().toString(36).slice(2,10) + Date.now().toString(36); }
+
+function fmtRp(n){
+  n = Math.round(Number(n)||0);
+  const neg = n < 0;
+  const s = Math.abs(n).toLocaleString('id-ID');
+  return (neg ? '-Rp ' : 'Rp ') + s;
+}
+function fmtDate(iso){
+  if(!iso) return '';
+  const d = new Date(iso + 'T00:00:00');
+  const days = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
+  const mon = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+  return String(d.getDate()).padStart(2,'0') + ' ' + mon[d.getMonth()] + ' ' + d.getFullYear();
+}
+function monthOf(iso){ return MONTHS[new Date(iso+'T00:00:00').getMonth()]; }
+function yearOf(iso){ return new Date(iso+'T00:00:00').getFullYear(); }
+function escapeHtml(s){
+  return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+/* ---------------- Storage (Terkoneksi ke Google Sheets API) ---------------- */
+const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbzHWh0LSoSV9XHWGhQH3twHM2oKXuaeBBAbBN3EnOTFSb1aMddb0KpAPEk6Q0BfTTKCVQ/exec";
+
+async function loadData(){
+  try {
+    const res = await fetch(SHEET_API_URL);
+    if (!res.ok) throw new Error("Status: " + res.status);
+    const data = await res.json();
+    state.ledger = (data.ledger && data.ledger.length > 0) ? data.ledger : SEED_DATA.ledger.map(d => ({ id: uid(), ...d }));
+    state.trips = (data.trips && data.trips.length > 0) ? data.trips : SEED_DATA.trips.map(tr => ({
+      id: uid(), nama: tr.nama, periode: tr.periode,
+      expenses: tr.expenses.map(e => ({ id: uid(), ...e }))
+    }));
+  } catch(e) {
+    console.warn("Koneksi ke Google Sheets terhalang (Akses Lokal/Offline). Memuat data cadangan...", e);
+    state.ledger = SEED_DATA.ledger.map(d => ({ id: uid(), ...d }));
+    state.trips = SEED_DATA.trips.map(tr => ({
+      id: uid(), nama: tr.nama, periode: tr.periode,
+      expenses: tr.expenses.map(e => ({ id: uid(), ...e }))
+    }));
+  }
+}
+
+async function saveLedger(){
+  try {
+    await fetch(SHEET_API_URL, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'saveLedger', data: state.ledger }),
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+    });
+  } catch(e) { console.error("Gagal menyimpan Ledger ke Sheets:", e); }
+}
+
+async function saveTrips(){
+  try {
+    await fetch(SHEET_API_URL, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'saveTrips', data: state.trips }),
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+    });
+  } catch(e) { console.error("Gagal menyimpan Trips ke Sheets:", e); }
+}
+
+/* ---------------- LOGIKA AUTO-SYNC CANVASSING KE BUKU ARUS KAS UTAMA ---------------- */
+function syncCanvassingToLedger(){
+  const activeTripIds = new Set(state.trips.map(t => t.id));
+
+  state.ledger = state.ledger.filter(row => {
+    if (row.id && row.id.startsWith('sync_trip_')) {
+      const tripId = row.id.replace('sync_trip_', '');
+      return activeTripIds.has(tripId);
+    }
+    return true;
+  });
+
+  state.trips.forEach(trip => {
+    const tot = tripTotals(trip);
+    const syncId = 'sync_trip_' + trip.id;
+    const existingIndex = state.ledger.findIndex(r => r.id === syncId);
+
+    if (tot.totalRealisasi > 0) {
+      let txDate = new Date().toISOString().slice(0, 10);
+      if (trip.expenses && trip.expenses.length > 0) {
+        const sortedDates = [...trip.expenses].map(e => e.tanggal).sort().reverse();
+        if (sortedDates[0]) txDate = sortedDates[0];
+      }
+
+      const syncRow = {
+        id: syncId,
+        tanggal: txDate,
+        kategori: 'Pengeluaran',
+        klasifikasi: 'Canvassing',
+        keterangan: 'Canvassing ' + trip.nama + (trip.periode ? ' (' + trip.periode + ')' : ''),
+        akun: 'BCA',
+        masuk: 0,
+        keluar: tot.totalRealisasi
+      };
+
+      if (existingIndex >= 0) {
+        state.ledger[existingIndex] = { ...state.ledger[existingIndex], ...syncRow };
+      } else {
+        state.ledger.push(syncRow);
+      }
+    } else {
+      if (existingIndex >= 0) {
+        state.ledger.splice(existingIndex, 1);
+      }
+    }
+  });
+}
+
+async function saveTripsAndSync(){
+  syncCanvassingToLedger();
+  await saveTrips();
+  await saveLedger();
+}
+
+/* ---------------- Derived data & KPI Baru ---------------- */
+function sortedLedger(){
+  return [...state.ledger].sort((a,b) => a.tanggal < b.tanggal ? -1 : (a.tanggal > b.tanggal ? 1 : 0));
+}
+function ledgerWithBalance(){
+  const sorted = sortedLedger();
+  let bal = 0;
+  return sorted.map(row => {
+    bal += (Number(row.masuk)||0) - (Number(row.keluar)||0);
+    return { ...row, saldo: bal };
+  });
+}
+function availableYears(){
+  const ys = new Set(state.ledger.map(r => yearOf(r.tanggal)));
+  if(ys.size === 0) ys.add(new Date().getFullYear());
+  return [...ys].sort();
+}
+function filteredLedger(){
+  const withBal = ledgerWithBalance();
+  return withBal.filter(r => {
+    if(yearOf(r.tanggal) !== state.filterYear) return false;
+    if(state.filterMonth !== 'Semua' && monthOf(r.tanggal) !== state.filterMonth) return false;
+    return true;
+  });
+}
+
+function kpis(){
+  const withBal = ledgerWithBalance();
+  const f = filteredLedger();
+  
+  const masuk = f.reduce((s,r) => s + (Number(r.masuk)||0), 0);
+  const keluar = f.reduce((s,r) => s + (Number(r.keluar)||0), 0);
+  const selisihBulanIni = masuk - keluar; // Net Pengeluaran/Pemasukan bulan itu saja
+
+  let saldoAwal = 0;
+  let saldoAkhirPeriode = 0;
+
+  if (withBal.length > 0) {
+    const y = state.filterYear;
+    const m = state.filterMonth;
+    
+    let lastBefore = null;
+    for (let i = 0; i < withBal.length; i++) {
+       const r = withBal[i];
+       const rY = yearOf(r.tanggal);
+       const rM = monthOf(r.tanggal);
+       
+       if (m === 'Semua') {
+          if (rY < y) lastBefore = r;
+          else break;
+       } else {
+          const mIndex = MONTHS.indexOf(m);
+          const rMIndex = MONTHS.indexOf(rM);
+          if (rY < y || (rY === y && rMIndex < mIndex)) {
+             lastBefore = r;
+          } else {
+             break; 
+          }
+       }
+    }
+    
+    saldoAwal = lastBefore ? lastBefore.saldo : 0;
+    
+    if (f.length > 0) {
+      saldoAkhirPeriode = f[f.length - 1].saldo;
+    } else {
+      saldoAkhirPeriode = saldoAwal;
+    }
+  }
+
+  return { masuk, keluar, selisihBulanIni, saldoAwal, saldoAkhirPeriode };
+}
+
+function monthlyTrend(){
+  const year = state.filterYear;
+  const withBal = ledgerWithBalance();
+  return MONTHS.map(bln => {
+    const rows = withBal.filter(r => yearOf(r.tanggal) === year && monthOf(r.tanggal) === bln);
+    const masuk = rows.reduce((s,r)=>s+(Number(r.masuk)||0),0);
+    const keluar = rows.reduce((s,r)=>s+(Number(r.keluar)||0),0);
+    return { bulan: bln, masuk, keluar };
+  });
+}
+function klasifikasiBreakdown(){
+  const f = filteredLedger().filter(r => r.kategori === 'Pengeluaran');
+  const map = {};
+  KLAS_EXPENSE_ONLY.forEach(k => map[k] = 0);
+  f.forEach(r => { map[r.klasifikasi] = (map[r.klasifikasi]||0) + (Number(r.keluar)||0); });
+  const total = Object.values(map).reduce((a,b)=>a+b,0);
+  return Object.entries(map)
+    .map(([klas, jumlah]) => ({ klas, jumlah, pct: total ? jumlah/total : 0 }))
+    .sort((a,b) => b.jumlah - a.jumlah);
+}
+function topExpenses(n){
+  const f = filteredLedger().filter(r => r.kategori === 'Pengeluaran' && (Number(r.keluar)||0) > 0);
+  return [...f].sort((a,b) => (b.keluar||0) - (a.keluar||0)).slice(0, n);
+}
+
+/* ---------------- Logika Petty Cash Canvassing ---------------- */
+function tripTotals(trip){
+  const ditarik = trip.expenses.reduce((s,e) => s + (Number(e.keluarRek)||0), 0);
+
+  const realisasiCash = trip.expenses.reduce((s,e) => s + (e.metode === 'Cash' ? (Number(e.realisasi)||0) : 0), 0);
+  const realisasiBCA = trip.expenses.reduce((s,e) => s + (e.metode === 'BCA' ? (Number(e.realisasi)||0) : 0), 0);
+  const realisasiFlazz = trip.expenses.reduce((s,e) => s + (e.metode !== 'Cash' && e.metode !== 'BCA' ? (Number(e.realisasi)||0) : 0), 0);
+  
+  const realisasiNonCash = realisasiBCA + realisasiFlazz;
+  const totalRealisasi = realisasiCash + realisasiNonCash;
+  const sisaCash = ditarik - realisasiCash;
+
+  return {
+    ditarik,          
+    realisasiCash,    
+    realisasiBCA,     
+    realisasiFlazz,   
+    realisasiNonCash, 
+    totalRealisasi,   
+    realisasi: totalRealisasi, 
+    sisaCash,         
+    sisa: sisaCash,   
+    pct: ditarik ? (realisasiCash / ditarik) : 0
+  };
+}
+
+function tripKategoriBreakdown(trip){
+  const map = {};
+  CANV_KATEGORI.forEach(k => map[k]=0);
+  trip.expenses.forEach(e => { map[e.kategori] = (map[e.kategori]||0) + (Number(e.keluarRek)||0) + (Number(e.realisasi)||0); });
+  return CANV_KATEGORI.map(k => ({ kategori:k, jumlah: map[k] }));
+}
+function tripMetodeBreakdown(trip){
+  const map = {};
+  CANV_METODE.forEach(k => map[k]=0);
+  trip.expenses.forEach(e => { map[e.metode] = (map[e.metode]||0) + (Number(e.keluarRek)||0) + (Number(e.realisasi)||0); });
+  return CANV_METODE.map(k => ({ metode:k, jumlah: map[k] }));
+}
+
+/* ---------------- Render: Tabs ---------------- */
+function renderTabs(){
+  const tabs = [
+    {id:'dashboard', label:'Dashboard', icon:'📊'},
+    {id:'ledger', label:'Buku Arus Kas', icon:'📒'},
+    {id:'canvassing', label:'Canvassing', icon:'🧭'},
+  ];
+  document.getElementById('mtgTabs').innerHTML = tabs.map(t => `
+    <button class="mtg-tab ${state.activeTab===t.id?'active':''}" data-tab="${t.id}">
+      <span>${t.icon}</span><span>${t.label}</span>
+    </button>
+  `).join('');
+  document.querySelectorAll('.mtg-tab').forEach(btn => {
+    btn.addEventListener('click', () => { state.activeTab = btn.dataset.tab; render(); });
+  });
+}
+
+/* ---------------- Render: Dashboard ---------------- */
+function renderDashboard(){
+  const years = availableYears();
+  const k = kpis();
+  const trend = monthlyTrend();
+  const klas = klasifikasiBreakdown();
+  const top10 = topExpenses(10);
+
+  const html = `
+    <div class="mtg-filterbar">
+      <div class="mtg-filter-group">
+        <label>Tahun</label>
+        <select class="mtg-select" id="filterYear">
+          ${years.map(y => `<option value="${y}" ${y===state.filterYear?'selected':''}>${y}</option>`).join('')}
+        </select>
+      </div>
+      <div class="mtg-filter-group">
+        <label>Bulan</label>
+        <select class="mtg-select" id="filterMonth">
+          <option value="Semua" ${state.filterMonth==='Semua'?'selected':''}>Semua Bulan</option>
+          ${MONTHS.map(m => `<option value="${m}" ${m===state.filterMonth?'selected':''}>${m}</option>`).join('')}
+        </select>
+      </div>
+      <div class="mtg-filter-note">Seluruh kartu, grafik, dan tabel di bawah otomatis mengikuti filter ini.</div>
+    </div>
+
+    <!-- UPDATE 5 KARTU KPI LENGKAP -->
+    <div class="mtg-kpi-grid">
+      <div class="mtg-kpi-card saldo">
+        <div class="mtg-kpi-label">Saldo Awal Periode</div>
+        <div class="mtg-kpi-value mono ${k.saldoAwal<0?'neg':''}">${fmtRp(k.saldoAwal)}</div>
+      </div>
+      <div class="mtg-kpi-card masuk">
+        <div class="mtg-kpi-label">Kas Masuk Periode</div>
+        <div class="mtg-kpi-value mono">${fmtRp(k.masuk)}</div>
+      </div>
+      <div class="mtg-kpi-card keluar">
+        <div class="mtg-kpi-label">Kas Keluar Periode</div>
+        <div class="mtg-kpi-value mono">${fmtRp(k.keluar)}</div>
+      </div>
+      <div class="mtg-kpi-card selisih">
+        <div class="mtg-kpi-label">Selisih Periode Ini</div>
+        <div class="mtg-kpi-value mono ${k.selisihBulanIni<0?'neg':''}">${fmtRp(k.selisihBulanIni)}</div>
+      </div>
+      <div class="mtg-kpi-card saldo">
+        <div class="mtg-kpi-label">Saldo Akhir Kumulatif</div>
+        <div class="mtg-kpi-value mono ${k.saldoAkhirPeriode<0?'neg':''}">${fmtRp(k.saldoAkhirPeriode)}</div>
+      </div>
+    </div>
+
+    <div class="mtg-section-title"><span class="bar"></span>Tren Bulanan — ${state.filterYear}</div>
+    <div class="mtg-chart-grid">
+      <div class="mtg-chart-card"><h4>Kas Masuk vs Kas Keluar per Bulan</h4><div class="chart-box" id="boxTrendBar"><canvas id="chartTrendBar"></canvas></div></div>
+      <div class="mtg-chart-card"><h4>Tren Saldo Kas Bulanan</h4><div class="chart-box" id="boxTrendLine"><canvas id="chartTrendLine"></canvas></div></div>
+    </div>
+
+    <div class="mtg-section-title"><span class="bar"></span>Rincian Pengeluaran — ${state.filterMonth==='Semua' ? 'Tahun ' + state.filterYear : state.filterMonth + ' ' + state.filterYear}</div>
+    <div class="mtg-chart-grid">
+      <div class="mtg-chart-card"><h4>Proporsi per Klasifikasi</h4><div class="chart-box" id="boxKlasPie"><canvas id="chartKlasPie"></canvas></div></div>
+      <div class="mtg-chart-card"><h4>Peringkat Klasifikasi (Terbesar → Terkecil)</h4><div class="chart-box" id="boxKlasBar"><canvas id="chartKlasBar"></canvas></div></div>
+    </div>
+
+    <div class="mtg-chart-grid" style="margin-top:14px;">
+      <div class="mtg-chart-card">
+        <h4>Rincian per Klasifikasi</h4>
+        <div class="mtg-table-scroll">
+          <table class="mtg-table">
+            <thead><tr><th>Klasifikasi</th><th style="text-align:right;">Jumlah</th><th style="text-align:right;">%</th></tr></thead>
+            <tbody>
+              ${klas.map(row => `
+                <tr>
+                  <td><span class="klas-chip" style="background:${KLAS_COLORS[row.klas]}22;color:${KLAS_COLORS[row.klas]}">${row.klas}</span></td>
+                  <td class="num">${fmtRp(row.jumlah)}</td>
+                  <td class="num">${(row.pct*100).toFixed(1)}%</td>
+                </tr>`).join('') || `<tr><td colspan="3" class="mtg-empty">Tidak ada data pengeluaran pada periode ini.</td></tr>`}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="mtg-chart-card">
+        <h4>Top 10 Pengeluaran Terbesar</h4>
+        <div class="mtg-table-scroll">
+          <table class="mtg-table">
+            <thead><tr><th>#</th><th>Tanggal</th><th>Keterangan</th><th style="text-align:right;">Jumlah</th></tr></thead>
+            <tbody>
+              ${top10.map((row,i) => `
+                <tr>
+                  <td><span class="rank-badge">${i+1}</span></td>
+                  <td>${fmtDate(row.tanggal)}</td>
+                  <td>${escapeHtml(row.keterangan)}</td>
+                  <td class="num">${fmtRp(row.keluar)}</td>
+                </tr>`).join('') || `<tr><td colspan="4" class="mtg-empty">Tidak ada data pengeluaran pada periode ini.</td></tr>`}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  `;
+  document.getElementById('mtgBody').innerHTML = html;
+
+  document.getElementById('filterYear').addEventListener('change', e => { state.filterYear = Number(e.target.value); render(); });
+  document.getElementById('filterMonth').addEventListener('change', e => { state.filterMonth = e.target.value; render(); });
+
+  setTimeout(() => {
+    drawDashboardCharts(trend, klas);
+  }, 50);
+}
+
+function destroyChart(key){
+  if(chartRegistry[key]){ 
+    chartRegistry[key].destroy(); 
+    delete chartRegistry[key]; 
+  }
+}
+
+function drawDashboardCharts(trend, klas, retries = 0){
+  if (typeof window.Chart === 'undefined') {
+    if (retries < 20) {
+      setTimeout(() => drawDashboardCharts(trend, klas, retries + 1), 250);
+    } else {
+      const errHtml = '<div style="color:var(--rust); padding:20px; font-size:12px; border:1px dashed var(--rust); border-radius:8px; text-align:center; width:100%;"><b>Error:</b> Pustaka grafik gagal diunduh.<br>Cek koneksi internet.</div>';
+      ['boxTrendBar', 'boxTrendLine', 'boxKlasPie', 'boxKlasBar'].forEach(id => {
+         const el = document.getElementById(id);
+         if(el) el.innerHTML = errHtml;
+      });
+    }
+    return;
+  }
+  
+  try{
+    ['chartTrendBar','chartTrendLine','chartKlasPie','chartKlasBar'].forEach(destroyChart);
+
+    const ctxBar = document.getElementById('chartTrendBar');
+    if(ctxBar){
+      chartRegistry['chartTrendBar'] = new Chart(ctxBar, {
+        type:'bar',
+        data:{ labels: trend.map(t=>t.bulan.slice(0,3)),
+          datasets:[
+            {label:'Kas Masuk', data: trend.map(t=>t.masuk), backgroundColor:'#1F7A5C', borderRadius:4},
+            {label:'Kas Keluar', data: trend.map(t=>t.keluar), backgroundColor:'#B4472B', borderRadius:4},
+          ]},
+        options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'bottom', labels:{boxWidth:10,font:{size:11}}}},
+          scales:{ y:{ ticks:{ callback:v=>fmtRp(v) , font:{size:10}} }, x:{ ticks:{font:{size:10}} } } }
+      });
+    }
+    const ctxLine = document.getElementById('chartTrendLine');
+    if(ctxLine){
+      let running = 0;
+      const saldoSeries = trend.map(t => { running += t.masuk - t.keluar; return running; });
+      chartRegistry['chartTrendLine'] = new Chart(ctxLine, {
+        type:'line',
+        data:{ labels: trend.map(t=>t.bulan.slice(0,3)),
+          datasets:[{ label:'Saldo', data: saldoSeries, borderColor:'#AD8A1E', backgroundColor:'#AD8A1E33',
+            tension:.3, fill:true, pointRadius:3 }]},
+        options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
+          scales:{ y:{ ticks:{ callback:v=>fmtRp(v), font:{size:10} } }, x:{ ticks:{font:{size:10}} } } }
+      });
+    }
+    const ctxPie = document.getElementById('chartKlasPie');
+    if(ctxPie){
+      const nz = klas.filter(k=>k.jumlah>0);
+      chartRegistry['chartKlasPie'] = new Chart(ctxPie, {
+        type:'doughnut',
+        data:{ labels: nz.map(k=>k.klas), datasets:[{ data: nz.map(k=>k.jumlah),
+          backgroundColor: nz.map(k=>KLAS_COLORS[k.klas]||'#8B95A0') }]},
+        options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'bottom', labels:{boxWidth:10,font:{size:10}}}} }
+      });
+    }
+    const ctxKBar = document.getElementById('chartKlasBar');
+    if(ctxKBar){
+      const nz = klas.filter(k=>k.jumlah>0);
+      chartRegistry['chartKlasBar'] = new Chart(ctxKBar, {
+        type:'bar',
+        data:{ labels: nz.map(k=>k.klas), datasets:[{ data: nz.map(k=>k.jumlah),
+          backgroundColor: nz.map(k=>KLAS_COLORS[k.klas]||'#8B95A0'), borderRadius:4 }]},
+        options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
+          scales:{ x:{ ticks:{ callback:v=>fmtRp(v), font:{size:10} } }, y:{ ticks:{font:{size:10.5}} } } }
+      });
+    }
+  }catch(err){ 
+    console.error('Gagal menggambar grafik dashboard:', err); 
+  }
+}
+
+/* ---------------- Render: Ledger ---------------- */
+function renderLedger(){
+  const withBal = ledgerWithBalance().slice().reverse();
+  const editing = state.editingTxnId;
+
+  const html = `
+    <div class="mtg-toolbar">
+      <div style="font-size:13px;color:var(--ink-soft);">${state.ledger.length} transaksi tercatat</div>
+      <button class="mtg-btn mtg-btn-primary" id="btnNewTxn">+ Tambah Transaksi</button>
+    </div>
+    <div id="txnFormSlot"></div>
+    <div class="mtg-table-wrap" style="margin-top:14px;">
+      <div class="mtg-table-scroll" style="max-height:560px;overflow-y:auto;">
+        <table class="mtg-table">
+          <thead><tr>
+            <th>Tanggal</th><th>Kategori</th><th>Klasifikasi</th><th>Keterangan</th><th>Akun</th>
+            <th style="text-align:right;">Kas Masuk</th><th style="text-align:right;">Kas Keluar</th>
+            <th style="text-align:right;">Saldo</th><th></th>
+          </tr></thead>
+          <tbody>
+            ${withBal.map(row => `
+              <tr class="${row.saldo<0?'neg-row':''}">
+                <td>${fmtDate(row.tanggal)}</td>
+                <td><span class="tag ${row.kategori==='Pengeluaran'?'tag-keluar':(row.kategori==='Kas Awal'?'tag-awal':'tag-masuk')}">${row.kategori}</span></td>
+                <td><span class="klas-chip">${row.klasifikasi}</span></td>
+                <td>${escapeHtml(row.keterangan)} ${row.id && row.id.startsWith('sync_trip_') ? '<small style="color:var(--gold); font-weight:600;">(Auto-Sync)</small>' : ''}</td>
+                <td>${row.akun}</td>
+                <td class="num">${row.masuk ? fmtRp(row.masuk) : '—'}</td>
+                <td class="num">${row.keluar ? fmtRp(row.keluar) : '—'}</td>
+                <td class="num saldo-cell">${fmtRp(row.saldo)}</td>
+                <td>
+                  <button class="mtg-icon-btn" data-edit="${row.id}" title="Edit">✎</button>
+                  <button class="mtg-icon-btn" data-del="${row.id}" title="Hapus">🗑</button>
+                </td>
+              </tr>`).join('') || `<tr><td colspan="9" class="mtg-empty">Belum ada transaksi.</td></tr>`}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+  document.getElementById('mtgBody').innerHTML = html;
+
+  document.getElementById('btnNewTxn').addEventListener('click', () => {
+    state.editingTxnId = 'new'; renderTxnForm();
+  });
+  document.querySelectorAll('[data-edit]').forEach(btn => {
+    btn.addEventListener('click', () => { state.editingTxnId = btn.dataset.edit; renderTxnForm(); window.scrollTo({top:0,behavior:'smooth'}); });
+  });
+  document.querySelectorAll('[data-del]').forEach(btn => {
+    btn.addEventListener('click', () => { confirmAndDeleteTxn(btn.dataset.del); });
+  });
+
+  if(state.editingTxnId) renderTxnForm();
+}
+
+function renderTxnForm(){
+  const slot = document.getElementById('txnFormSlot');
+  if(!slot) return;
+  if(!state.editingTxnId){ slot.innerHTML = ''; return; }
+  const isNew = state.editingTxnId === 'new';
+  const row = isNew ? { tanggal:new Date().toISOString().slice(0,10), kategori:'Pengeluaran', klasifikasi:'Lain-lain', keterangan:'', akun:'BCA', masuk:0, keluar:0 }
+                     : state.ledger.find(r => r.id === state.editingTxnId);
+  if(!row){ state.editingTxnId = null; slot.innerHTML=''; return; }
+
+  slot.innerHTML = `
+    <div class="mtg-form-card" style="margin-top:12px;">
+      <h3 style="font-size:14px;margin-bottom:12px;">${isNew ? 'Tambah Transaksi Baru' : 'Edit Transaksi'}</h3>
+      <div class="mtg-form-grid">
+        <div class="mtg-field"><label>Tanggal</label><input type="date" class="mtg-input" id="fTanggal" value="${row.tanggal}"></div>
+        <div class="mtg-field"><label>Kategori</label>
+          <select id="fKategori">${KATEGORI_LIST.map(k=>`<option ${k===row.kategori?'selected':''}>${k}</option>`).join('')}</select>
+        </div>
+        <div class="mtg-field"><label>Klasifikasi</label>
+          <select id="fKlasifikasi">${KLASIFIKASI_LIST.map(k=>`<option ${k===row.klasifikasi?'selected':''}>${k}</option>`).join('')}</select>
+        </div>
+        <div class="mtg-field"><label>Akun/Bank</label>
+          <select id="fAkun">${AKUN_LIST.map(k=>`<option ${k===row.akun?'selected':''}>${k}</option>`).join('')}</select>
+        </div>
+        <div class="mtg-field" style="grid-column:span 2;"><label>Keterangan</label><input class="mtg-input" id="fKeterangan" value="${escapeHtml(row.keterangan)}" placeholder="cth. Bensin mobil kantor"></div>
+        <div class="mtg-field"><label>Kas Masuk (IDR)</label><input type="number" class="mtg-input" id="fMasuk" value="${row.masuk||0}" min="0"></div>
+        <div class="mtg-field"><label>Kas Keluar (IDR)</label><input type="number" class="mtg-input" id="fKeluar" value="${row.keluar||0}" min="0"></div>
+      </div>
+      <div class="mtg-form-actions">
+        <button class="mtg-btn mtg-btn-ghost" id="fCancel">Batal</button>
+        <button class="mtg-btn mtg-btn-primary" id="fSave">${isNew ? 'Simpan Transaksi' : 'Simpan Perubahan'}</button>
+      </div>
+    </div>
+  `;
+  document.getElementById('fCancel').addEventListener('click', () => { state.editingTxnId = null; renderLedger(); });
+  document.getElementById('fSave').addEventListener('click', async () => {
+    const data = {
+      tanggal: document.getElementById('fTanggal').value,
+      kategori: document.getElementById('fKategori').value,
+      klasifikasi: document.getElementById('fKlasifikasi').value,
+      keterangan: document.getElementById('fKeterangan').value.trim(),
+      akun: document.getElementById('fAkun').value,
+      masuk: Number(document.getElementById('fMasuk').value)||0,
+      keluar: Number(document.getElementById('fKeluar').value)||0,
+    };
+    if(!data.tanggal || !data.keterangan){ alert('Tanggal dan Keterangan wajib diisi.'); return; }
+    if(isNew){ state.ledger.push({ id: uid(), ...data }); }
+    else{ const idx = state.ledger.findIndex(r=>r.id===row.id); state.ledger[idx] = { ...state.ledger[idx], ...data }; }
+    await saveLedger();
+    state.editingTxnId = null;
+    render();
+  });
+}
+
+function confirmAndDeleteTxn(id){
+  const row = state.ledger.find(r=>r.id===id);
+  if(!row) return;
+  showConfirmModal(
+    'Hapus Transaksi?',
+    `Transaksi "${row.keterangan}" (${fmtDate(row.tanggal)}) akan dihapus permanen.`,
+    async () => {
+      state.ledger = state.ledger.filter(r=>r.id!==id);
+      await saveLedger();
+      render();
+    }
+  );
+}
+
+/* ---------------- Render: Canvassing ---------------- */
+function renderCanvassing(){
+  if(!state.activeTripId && state.trips.length) state.activeTripId = state.trips[0].id;
+
+  const totalsAll = state.trips.map(t => ({ trip: t, tot: tripTotals(t) }));
+  const grandDitarik = totalsAll.reduce((s,x)=>s+x.tot.ditarik,0);
+  const grandRealisasiCash = totalsAll.reduce((s,x)=>s+x.tot.realisasiCash,0);
+  const grandRealisasiNonCash = totalsAll.reduce((s,x)=>s+x.tot.realisasiNonCash,0);
+  const grandTotalRealisasi = totalsAll.reduce((s,x)=>s+x.tot.totalRealisasi,0);
+  const grandSisaCash = grandDitarik - grandRealisasiCash;
+
+  const html = `
+    <div class="mtg-section-title"><span class="bar"></span>Rekap Seluruh Trip Canvassing</div>
+    <div class="mtg-summary-strip">
+      <div class="mtg-summary-box"><div class="lbl">Total Tarik Tunai</div><div class="val mono">${fmtRp(grandDitarik)}</div></div>
+      <div class="mtg-summary-box"><div class="lbl">Realisasi Cash</div><div class="val mono">${fmtRp(grandRealisasiCash)}</div></div>
+      <div class="mtg-summary-box"><div class="lbl">Sisa Cash di Tangan</div><div class="val mono ${grandSisaCash<0?'neg':''}">${fmtRp(grandSisaCash)}</div></div>
+      <div class="mtg-summary-box"><div class="lbl">Realisasi BCA & Flazz</div><div class="val mono">${fmtRp(grandRealisasiNonCash)}</div></div>
+      <div class="mtg-summary-box highlight"><div class="lbl" style="color:var(--navy);">Total Pengeluaran Full</div><div class="val mono">${fmtRp(grandTotalRealisasi)}</div></div>
+    </div>
+    <div class="mtg-chart-card" style="margin-bottom:18px;">
+      <h4>Total Realisasi per Trip</h4>
+      <div class="chart-box" id="boxTripCompare"><canvas id="chartTripCompare"></canvas></div>
+    </div>
+
+    <div class="mtg-section-title"><span class="bar"></span>Detail per Trip</div>
+    <div class="mtg-trip-grid">
+      <div class="mtg-trip-list">
+        ${state.trips.map(t => {
+          const tot = tripTotals(t);
+          return `
+          <div class="mtg-trip-item ${t.id===state.activeTripId?'active':''}" data-trip="${t.id}">
+            <div class="nm">${escapeHtml(t.nama)}</div>
+            <div class="pd">${escapeHtml(t.periode)}</div>
+            <div class="sisa" style="color:var(--navy);margin-top:4px;">Total Exp: ${fmtRp(tot.totalRealisasi)}</div>
+            <div class="sisa ${tot.sisaCash<0?'neg':''}">Sisa Cash: ${fmtRp(tot.sisaCash)}</div>
+          </div>`;
+        }).join('')}
+        <div class="mtg-trip-add">
+          <button class="mtg-btn mtg-btn-ghost mtg-btn-sm" id="btnNewTrip">+ Trip Baru</button>
+        </div>
+      </div>
+      <div id="tripDetailSlot"></div>
+    </div>
+  `;
+  document.getElementById('mtgBody').innerHTML = html;
+
+  document.querySelectorAll('[data-trip]').forEach(el => {
+    el.addEventListener('click', () => { state.activeTripId = el.dataset.trip; state.editingTripExpenseId = null; renderTripDetail(); });
+  });
+  document.getElementById('btnNewTrip').addEventListener('click', showNewTripModal);
+
+  setTimeout(() => {
+    drawTripCompareChart(totalsAll);
+  }, 50);
+  renderTripDetail();
+}
+
+function drawTripCompareChart(totalsAll, retries = 0){
+  if (typeof window.Chart === 'undefined') {
+    if (retries < 20) {
+      setTimeout(() => drawTripCompareChart(totalsAll, retries + 1), 250);
+    } else {
+       const el = document.getElementById('boxTripCompare');
+       if(el) el.innerHTML = '<div style="color:var(--rust); padding:20px; font-size:12px; border:1px dashed var(--rust); border-radius:8px; text-align:center; width:100%;"><b>Error:</b> Pustaka grafik gagal diunduh.<br>Cek koneksi internet.</div>';
+    }
+    return;
+  }
+  
+  try{
+    destroyChart('chartTripCompare');
+    const ctx = document.getElementById('chartTripCompare');
+    if(!ctx) return;
+    chartRegistry['chartTripCompare'] = new Chart(ctx, {
+      type:'bar',
+      data:{ labels: totalsAll.map(x=>x.trip.nama),
+        datasets:[
+          {label:'Tarik Tunai', data: totalsAll.map(x=>x.tot.ditarik), backgroundColor:'#AD8A1E88', borderRadius:4},
+          {label:'Total Pengeluaran Full', data: totalsAll.map(x=>x.tot.totalRealisasi), backgroundColor:'#12293D', borderRadius:4},
+        ]},
+      options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'bottom', labels:{boxWidth:10,font:{size:11}}}},
+        scales:{ y:{ ticks:{ callback:v=>fmtRp(v), font:{size:10} } } } }
+    });
+  }catch(err){ console.error('Gagal menggambar grafik perbandingan trip:', err); }
+}
+
+function renderTripDetail(){
+  const slot = document.getElementById('tripDetailSlot');
+  if(!slot) return;
+  const trip = state.trips.find(t => t.id === state.activeTripId);
+  if(!trip){ slot.innerHTML = `<div class="mtg-table-wrap"><div class="mtg-empty">Pilih atau buat trip canvassing.</div></div>`; return; }
+
+  const tot = tripTotals(trip);
+  const katBreak = tripKategoriBreakdown(trip);
+  const metBreak = tripMetodeBreakdown(trip);
+
+  slot.innerHTML = `
+    <div>
+      <div class="mtg-toolbar">
+        <div>
+          <h3 style="font-size:15px;">${escapeHtml(trip.nama)}</h3>
+          <div style="font-size:12px;color:var(--ink-faint);">${escapeHtml(trip.periode)}</div>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="mtg-btn mtg-btn-gold mtg-btn-sm" id="btnDownloadPdf">⬇ Download PDF</button>
+          <button class="mtg-btn mtg-btn-ghost mtg-btn-sm" id="btnEditTripInfo">✎ Edit Info Trip</button>
+          <button class="mtg-btn mtg-btn-danger mtg-btn-sm" id="btnDelTrip">🗑 Hapus Trip</button>
+        </div>
+      </div>
+      <div id="tripInfoFormSlot"></div>
+
+      <div class="mtg-summary-strip">
+        <div class="mtg-summary-box"><div class="lbl">Tarik Tunai (Cash Pool)</div><div class="val mono">${fmtRp(tot.ditarik)}</div></div>
+        <div class="mtg-summary-box"><div class="lbl">Realisasi Cash</div><div class="val mono">${fmtRp(tot.realisasiCash)}</div></div>
+        <div class="mtg-summary-box"><div class="lbl">Sisa Cash di Tangan (${(tot.pct*100).toFixed(0)}%)</div><div class="val mono ${tot.sisaCash<0?'neg':''}">${fmtRp(tot.sisaCash)}</div></div>
+        <div class="mtg-summary-box"><div class="lbl">Realisasi BCA & Flazz</div><div class="val mono">${fmtRp(tot.realisasiNonCash)}</div></div>
+        <div class="mtg-summary-box highlight"><div class="lbl" style="color:var(--navy);">Total Pengeluaran Full</div><div class="val mono">${fmtRp(tot.totalRealisasi)}</div></div>
+      </div>
+
+      <div class="mtg-chart-grid" style="margin-bottom:14px;">
+        <div class="mtg-chart-card">
+          <h4>Rincian per Kategori</h4>
+          <div class="mtg-table-scroll"><table class="mtg-table">
+            <thead><tr><th>Kategori</th><th style="text-align:right;">Jumlah</th></tr></thead>
+            <tbody>${katBreak.map(r=>`<tr><td>${r.kategori}</td><td class="num">${fmtRp(r.jumlah)}</td></tr>`).join('')}</tbody>
+          </table></div>
+        </div>
+        <div class="mtg-chart-card">
+          <h4>Rincian per Metode Pembayaran</h4>
+          <div class="mtg-table-scroll"><table class="mtg-table">
+            <thead><tr><th>Metode</th><th style="text-align:right;">Jumlah</th></tr></thead>
+            <tbody>${metBreak.map(r=>`<tr><td>${r.metode}</td><td class="num">${fmtRp(r.jumlah)}</td></tr>`).join('')}</tbody>
+          </table></div>
+        </div>
+      </div>
+
+      <div class="mtg-toolbar">
+        <div style="font-size:13px;color:var(--ink-soft);">${trip.expenses.length} entri pengeluaran</div>
+        <button class="mtg-btn mtg-btn-gold mtg-btn-sm" id="btnNewExpense">+ Tambah Pengeluaran</button>
+      </div>
+      <div id="expenseFormSlot"></div>
+      <div class="mtg-table-wrap">
+        <div class="mtg-table-scroll" style="max-height:360px;overflow-y:auto;">
+          <table class="mtg-table">
+            <thead><tr><th>Tanggal</th><th>Kategori</th><th>Keterangan</th><th>Metode</th>
+              <th style="text-align:right;">Keluar Rekening</th><th style="text-align:right;">Realisasi</th><th></th></tr></thead>
+            <tbody>
+              ${trip.expenses.map(e => `
+                <tr>
+                  <td>${fmtDate(e.tanggal)}</td>
+                  <td><span class="klas-chip">${e.kategori}</span></td>
+                  <td>${escapeHtml(e.keterangan)}</td>
+                  <td>${e.metode}</td>
+                  <td class="num">${e.keluarRek ? fmtRp(e.keluarRek) : '—'}</td>
+                  <td class="num">${e.realisasi ? fmtRp(e.realisasi) : '—'}</td>
+                  <td>
+                    <button class="mtg-icon-btn" data-editexp="${e.id}" title="Edit">✎</button>
+                    <button class="mtg-icon-btn" data-delexp="${e.id}" title="Hapus">🗑</button>
+                  </td>
+                </tr>`).join('') || `<tr><td colspan="7" class="mtg-empty">Belum ada entri pengeluaran.</td></tr>`}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('btnNewExpense').addEventListener('click', () => { state.editingTripExpenseId = 'new'; renderExpenseForm(trip); });
+  document.querySelectorAll('[data-editexp]').forEach(btn => btn.addEventListener('click', () => { state.editingTripExpenseId = btn.dataset.editexp; renderExpenseForm(trip); }));
+  document.querySelectorAll('[data-delexp]').forEach(btn => btn.addEventListener('click', () => confirmAndDeleteExpense(trip, btn.dataset.delexp)));
+  document.getElementById('btnEditTripInfo').addEventListener('click', () => renderTripInfoForm(trip));
+  document.getElementById('btnDelTrip').addEventListener('click', () => confirmAndDeleteTrip(trip));
+  document.getElementById('btnDownloadPdf').addEventListener('click', () => generateTripPDF(trip));
+
+  if(state.editingTripExpenseId) renderExpenseForm(trip);
+}
+
+function renderExpenseForm(trip){
+  const slot = document.getElementById('expenseFormSlot');
+  if(!slot) return;
+  if(!state.editingTripExpenseId){ slot.innerHTML = ''; return; }
+  const isNew = state.editingTripExpenseId === 'new';
+  const e = isNew ? { tanggal:new Date().toISOString().slice(0,10), kategori:'Perjalanan', keterangan:'', metode:'Cash', keluarRek:0, realisasi:0 }
+                   : trip.expenses.find(x => x.id === state.editingTripExpenseId);
+  if(!e){ state.editingTripExpenseId = null; slot.innerHTML=''; return; }
+
+  slot.innerHTML = `
+    <div class="mtg-form-card" style="margin-bottom:14px;">
+      <h3 style="font-size:14px;margin-bottom:12px;">${isNew ? 'Tambah Pengeluaran' : 'Edit Pengeluaran'}</h3>
+      <div class="mtg-form-grid">
+        <div class="mtg-field"><label>Tanggal</label><input type="date" class="mtg-input" id="eTanggal" value="${e.tanggal}"></div>
+        <div class="mtg-field"><label>Kategori</label><select id="eKategori">${CANV_KATEGORI.map(k=>`<option ${k===e.kategori?'selected':''}>${k}</option>`).join('')}</select></div>
+        <div class="mtg-field"><label>Metode Pembayaran</label><select id="eMetode">${CANV_METODE.map(k=>`<option ${k===e.metode?'selected':''}>${k}</option>`).join('')}</select></div>
+        <div class="mtg-field"><label>Keterangan</label><input class="mtg-input" id="eKeterangan" value="${escapeHtml(e.keterangan)}" placeholder="cth. Bensin"></div>
+        <div class="mtg-field"><label>Keluar Rekening (IDR)</label><input type="number" class="mtg-input" id="eKeluarRek" value="${e.keluarRek||0}" min="0"></div>
+        <div class="mtg-field"><label>Realisasi (IDR)</label><input type="number" class="mtg-input" id="eRealisasi" value="${e.realisasi||0}" min="0"></div>
+      </div>
+      <div class="mtg-form-actions">
+        <button class="mtg-btn mtg-btn-ghost" id="eCancel">Batal</button>
+        <button class="mtg-btn mtg-btn-primary" id="eSave">${isNew ? 'Simpan' : 'Simpan Perubahan'}</button>
+      </div>
+    </div>
+  `;
+  document.getElementById('eCancel').addEventListener('click', () => { state.editingTripExpenseId = null; renderTripDetail(); });
+  document.getElementById('eSave').addEventListener('click', async () => {
+    const data = {
+      tanggal: document.getElementById('eTanggal').value,
+      kategori: document.getElementById('eKategori').value,
+      keterangan: document.getElementById('eKeterangan').value.trim(),
+      metode: document.getElementById('eMetode').value,
+      keluarRek: Number(document.getElementById('eKeluarRek').value)||0,
+      realisasi: Number(document.getElementById('eRealisasi').value)||0,
+    };
+    if(!data.tanggal || !data.keterangan){ alert('Tanggal dan Keterangan wajib diisi.'); return; }
+    if(isNew){ trip.expenses.push({ id: uid(), ...data }); }
+    else{ const idx = trip.expenses.findIndex(x=>x.id===e.id); trip.expenses[idx] = { ...trip.expenses[idx], ...data }; }
+    
+    await saveTripsAndSync();
+    state.editingTripExpenseId = null;
+    render();
+  });
+}
+
+function renderTripInfoForm(trip){
+  const slot = document.getElementById('tripInfoFormSlot');
+  if(!slot) return;
+  slot.innerHTML = `
+    <div class="mtg-form-card" style="margin-bottom:14px;">
+      <div class="mtg-form-grid" style="grid-template-columns:1fr 1fr;">
+        <div class="mtg-field"><label>Nama Trip</label><input class="mtg-input" id="tNama" value="${escapeHtml(trip.nama)}"></div>
+        <div class="mtg-field"><label>Periode</label><input class="mtg-input" id="tPeriode" value="${escapeHtml(trip.periode)}" placeholder="cth. 1-5 Agustus 2026"></div>
+      </div>
+      <div class="mtg-form-actions">
+        <button class="mtg-btn mtg-btn-ghost" id="tCancel">Batal</button>
+        <button class="mtg-btn mtg-btn-primary" id="tSave">Simpan</button>
+      </div>
+    </div>`;
+  document.getElementById('tCancel').addEventListener('click', () => { slot.innerHTML=''; });
+  document.getElementById('tSave').addEventListener('click', async () => {
+    trip.nama = document.getElementById('tNama').value.trim() || trip.nama;
+    trip.periode = document.getElementById('tPeriode').value.trim();
+    
+    await saveTripsAndSync();
+    render();
+  });
+}
+
+function showNewTripModal(){
+  const overlay = document.createElement('div');
+  overlay.className = 'mtg-modal-overlay';
+  overlay.innerHTML = `
+    <div class="mtg-modal">
+      <h3>Trip Canvassing Baru</h3>
+      <p>Buat trip baru untuk mulai mencatat pengeluaran perjalanan.</p>
+      <div class="mtg-field" style="margin-bottom:10px;"><label>Nama Trip</label><input class="mtg-input" id="ntNama" placeholder="cth. Zona 6" style="width:100%;"></div>
+      <div class="mtg-field" style="margin-bottom:16px;"><label>Periode</label><input class="mtg-input" id="ntPeriode" placeholder="cth. 1-5 Agustus 2026" style="width:100%;"></div>
+      <div class="mtg-form-actions">
+        <button class="mtg-btn mtg-btn-ghost" id="ntCancel">Batal</button>
+        <button class="mtg-btn mtg-btn-primary" id="ntSave">Buat Trip</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  document.getElementById('ntCancel').addEventListener('click', () => overlay.remove());
+  overlay.addEventListener('click', (ev) => { if(ev.target === overlay) overlay.remove(); });
+  document.getElementById('ntSave').addEventListener('click', async () => {
+    const nama = document.getElementById('ntNama').value.trim();
+    if(!nama){ alert('Nama trip wajib diisi.'); return; }
+    const periode = document.getElementById('ntPeriode').value.trim();
+    const newTrip = { id: uid(), nama, periode, expenses: [] };
+    state.trips.push(newTrip);
+    state.activeTripId = newTrip.id;
+    
+    await saveTripsAndSync();
+    overlay.remove();
+    render();
+  });
+}
+
+function confirmAndDeleteExpense(trip, expId){
+  showConfirmModal('Hapus Pengeluaran?', 'Entri pengeluaran ini akan dihapus permanen.', async () => {
+    trip.expenses = trip.expenses.filter(x => x.id !== expId);
+    await saveTripsAndSync();
+    render();
+  });
+}
+
+/* ---------------- PDF export per trip ---------------- */
+function generateTripPDF(trip){
+  try{
+    if(!window.jspdf || !window.jspdf.jsPDF){
+      alert('Modul PDF belum siap dimuat. Coba lagi sesaat lagi.');
+      return;
+    }
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation:'portrait', unit:'pt', format:'a4' });
+    const tot = tripTotals(trip);
+    const katBreak = tripKategoriBreakdown(trip).filter(r=>r.jumlah>0);
+    const metBreak = tripMetodeBreakdown(trip).filter(r=>r.jumlah>0);
+    const marginX = 40;
+    let y = 50;
+
+    doc.setFont('helvetica','bold'); doc.setFontSize(16); doc.setTextColor(18,41,61);
+    doc.text('Rekap Canvassing — ' + trip.nama, marginX, y);
+    y += 18;
+    doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.setTextColor(90,100,110);
+    doc.text('Periode: ' + (trip.periode || '-'), marginX, y);
+    doc.text('Dicetak: ' + new Date().toLocaleDateString('id-ID', {day:'2-digit',month:'long',year:'numeric'}), 400, y);
+    y += 20;
+
+    doc.setDrawColor(224,227,219);
+    doc.line(marginX, y, 555, y);
+    y += 20;
+
+    const boxes = [
+      ['Tarik Tunai', fmtRp(tot.ditarik)],
+      ['Realisasi Cash', fmtRp(tot.realisasiCash)],
+      ['Sisa Cash', fmtRp(tot.sisaCash)],
+      ['BCA & Flazz', fmtRp(tot.realisasiNonCash)],
+      ['Total Full', fmtRp(tot.totalRealisasi)],
+    ];
+    const boxW = 95, boxH = 46;
+    boxes.forEach((b, i) => {
+      const bx = marginX + i*(boxW+6);
+      doc.setFillColor(i===4 ? 236 : 244, i===4 ? 238 : 245, i===4 ? 232 : 240);
+      doc.roundedRect(bx, y, boxW, boxH, 4, 4, 'F');
+      doc.setFont('helvetica','bold'); doc.setFontSize(7); doc.setTextColor(i===4 ? 18 : 91, i===4 ? 41 : 102, i===4 ? 61 : 114);
+      doc.text(b[0].toUpperCase(), bx+6, y+16);
+      doc.setFont('helvetica','bold'); doc.setFontSize(9.5); doc.setTextColor(18,41,61);
+      doc.text(b[1], bx+6, y+34);
+    });
+    y += boxH + 22;
+
+    if(katBreak.length){
+      doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(18,41,61);
+      doc.text('Rincian per Kategori', marginX, y);
+      doc.autoTable({
+        startY: y+8, margin:{left:marginX, right:40},
+        head:[['Kategori','Jumlah (IDR)']],
+        body: katBreak.map(r => [r.kategori, fmtRp(r.jumlah)]),
+        styles:{ font:'helvetica', fontSize:9, cellPadding:5 },
+        headStyles:{ fillColor:[18,41,61], textColor:255 },
+        columnStyles:{ 1:{ halign:'right' } },
+        theme:'grid',
+      });
+      y = doc.lastAutoTable.finalY + 20;
+    }
+
+    if(metBreak.length){
+      doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(18,41,61);
+      doc.text('Rincian per Metode Pembayaran', marginX, y);
+      doc.autoTable({
+        startY: y+8, margin:{left:marginX, right:40},
+        head:[['Metode','Jumlah (IDR)']],
+        body: metBreak.map(r => [r.metode, fmtRp(r.jumlah)]),
+        styles:{ font:'helvetica', fontSize:9, cellPadding:5 },
+        headStyles:{ fillColor:[18,41,61], textColor:255 },
+        columnStyles:{ 1:{ halign:'right' } },
+        theme:'grid',
+      });
+      y = doc.lastAutoTable.finalY + 20;
+    }
+
+    doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(18,41,61);
+    doc.text('Rincian Transaksi', marginX, y);
+    const rows = [...trip.expenses].sort((a,b)=> a.tanggal < b.tanggal ? -1 : (a.tanggal>b.tanggal?1:0));
+    doc.autoTable({
+      startY: y+8, margin:{left:marginX, right:40},
+      head:[['Tanggal','Kategori','Keterangan','Metode','Keluar Rek.','Realisasi']],
+      body: rows.map(e => [
+        fmtDate(e.tanggal), e.kategori, e.keterangan, e.metode,
+        e.keluarRek ? fmtRp(e.keluarRek) : '-',
+        e.realisasi ? fmtRp(e.realisasi) : '-',
+      ]),
+      styles:{ font:'helvetica', fontSize:8.5, cellPadding:4.5, overflow:'linebreak' },
+      headStyles:{ fillColor:[18,41,61], textColor:255, fontSize:8.5 },
+      columnStyles:{ 4:{ halign:'right' }, 5:{ halign:'right' } },
+      theme:'grid',
+      didDrawPage: (data) => {
+        const pageCount = doc.internal.getNumberOfPages();
+        doc.setFontSize(8); doc.setTextColor(139,149,160);
+        doc.text('Arus Kas MTG — Canvassing ' + trip.nama, marginX, 820);
+        doc.text('Hal. ' + doc.internal.getCurrentPageInfo().pageNumber + ' / ' + pageCount, 500, 820);
+      }
+    });
+
+    const safeName = trip.nama.replace(/[^a-z0-9]+/gi,'_');
+    doc.save('Canvassing_' + safeName + '.pdf');
+  }catch(err){
+    console.error('Gagal membuat PDF:', err);
+    alert('Gagal membuat PDF. Silakan coba lagi.');
+  }
+}
+
+function confirmAndDeleteTrip(trip){
+  showConfirmModal('Hapus Trip?', `Trip "${trip.nama}" beserta seluruh entri pengeluarannya akan dihapus permanen.`, async () => {
+    state.trips = state.trips.filter(t => t.id !== trip.id);
+    state.activeTripId = state.trips.length ? state.trips[0].id : null;
+    await saveTripsAndSync();
+    render();
+  });
+}
+
+/* ---------------- Confirm modal ---------------- */
+function showConfirmModal(title, msg, onConfirm){
+  const overlay = document.createElement('div');
+  overlay.className = 'mtg-modal-overlay';
+  overlay.innerHTML = `
+    <div class="mtg-modal">
+      <h3>${title}</h3>
+      <p>${msg}</p>
+      <div class="mtg-form-actions">
+        <button class="mtg-btn mtg-btn-ghost" id="cmCancel">Batal</button>
+        <button class="mtg-btn mtg-btn-danger" style="background:var(--rust);color:#fff;" id="cmOk">Ya, Hapus</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  document.getElementById('cmCancel').addEventListener('click', () => overlay.remove());
+  overlay.addEventListener('click', (ev) => { if(ev.target === overlay) overlay.remove(); });
+  document.getElementById('cmOk').addEventListener('click', async () => { overlay.remove(); await onConfirm(); });
+}
+
+/* ---------------- Master render ---------------- */
+function render(){
+  renderTabs();
+  const withBal = ledgerWithBalance();
+  const saldo = withBal.length ? withBal[withBal.length-1].saldo : 0;
+  const pill = document.getElementById('headerSaldo');
+  if(pill){ pill.textContent = fmtRp(saldo); pill.style.color = saldo < 0 ? '#F2B8A8' : '#fff'; }
+
+  if(state.activeTab === 'dashboard') renderDashboard();
+  else if(state.activeTab === 'ledger') renderLedger();
+  else if(state.activeTab === 'canvassing') renderCanvassing();
+}
+
+async function init(){
+  await loadData();
+  syncCanvassingToLedger(); 
+  const years = availableYears();
+  state.filterYear = years[years.length-1] || new Date().getFullYear();
+  render();
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+
+})();
+</script>
