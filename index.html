@@ -15,7 +15,7 @@
     --ink:#16212B;
     --ink-soft:#5B6672;
     --ink-faint:#8B95A0;
-    --navy:#123324; /* Hijau Tua */
+    --navy:#123324;
     --navy-soft:#1D4A37;
     --gold:#AD8A1E;
     --gold-soft:#F4EAC9;
@@ -69,7 +69,6 @@
   .mtg-brand-title{font-size:20px;font-weight:700;color:#fff;}
   .mtg-brand-sub{font-size:12.5px;color:#A2C9B6;margin-top:2px;display:flex;align-items:center;gap:8px;}
   
-  /* Status Indikator Cloud Sync */
   .mtg-sync-status{
     font-size:11px; padding:2px 8px; border-radius:99px; background:rgba(255,255,255,0.12); color:#E1F0E9;
     display:inline-flex; align-items:center; gap:4px; transition:all .3s ease;
@@ -79,13 +78,21 @@
   }
   .mtg-sync-btn:hover{ color:#fff; background:rgba(255,255,255,0.1); }
 
+  /* GROUP SALDO BARU */
+  .mtg-balance-group{
+    display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;
+  }
   .mtg-balance-pill{
     background:rgba(255,255,255,0.08);
     border:1px solid rgba(255,255,255,0.14);
-    border-radius:10px; padding:10px 16px; text-align:right;
+    border-radius:10px; padding:10px 14px; text-align:right; min-width:140px;
   }
-  .mtg-balance-pill .lbl{font-size:11px;color:#A2C9B6;text-transform:uppercase;letter-spacing:.05em;}
-  .mtg-balance-pill .val{font-family:'IBM Plex Mono';font-size:20px;font-weight:600;color:#fff;margin-top:2px;}
+  .mtg-balance-pill.total{
+    background:rgba(173,138,30,0.2); border-color:rgba(173,138,30,0.4);
+  }
+  .mtg-balance-pill .lbl{font-size:10.5px;color:#A2C9B6;text-transform:uppercase;letter-spacing:.05em;}
+  .mtg-balance-pill.total .lbl{color:#F4EAC9;}
+  .mtg-balance-pill .val{font-family:'IBM Plex Mono';font-size:18px;font-weight:600;color:#fff;margin-top:2px;}
 
   .mtg-tabs{display:flex;gap:4px;margin-top:20px;overflow-x:auto;padding-bottom:2px;}
   .mtg-tab{
@@ -167,6 +174,8 @@
   .tag-masuk{background:var(--emerald-soft); color:var(--emerald);}
   .tag-keluar{background:var(--rust-soft); color:var(--rust);}
   .tag-awal{background:var(--gold-soft); color:var(--gold);}
+  .tag-mutasi{background:#E0E3DB; color:#5B6672;}
+  
   .klas-chip{
     display:inline-block; padding:3px 9px; border-radius:6px; font-size:11px; font-weight:600;
     background:var(--surface-alt); color:var(--navy-soft);
@@ -251,8 +260,11 @@
   @media (max-width: 768px){
     .mtg-header { padding: 16px 16px 0 16px; }
     .mtg-header-top { flex-direction: column; gap: 12px; }
-    .mtg-balance-pill { width: 100%; text-align: left; display: flex; justify-content: space-between; align-items: center; }
-    .mtg-balance-pill .val { margin-top: 0; font-size: 17px; }
+    
+    .mtg-balance-group { flex-direction: column; width: 100%; gap: 8px; }
+    .mtg-balance-pill { width: 100%; display: flex; justify-content: space-between; align-items: center; text-align: left; padding: 10px 14px; }
+    .mtg-balance-pill .val { margin-top: 0; font-size: 16px; }
+
     .mtg-body { padding: 16px 14px 28px 14px; }
     
     .mtg-kpi-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
@@ -288,10 +300,23 @@
           </div>
         </div>
       </div>
-      <div class="mtg-balance-pill">
-        <div class="lbl">Saldo Kas Saat Ini</div>
-        <div class="val mono" id="headerSaldo">Rp 0</div>
+      
+      <!-- KOTAK SALDO TERPISAH: BCA, CASH, & TOTAL -->
+      <div class="mtg-balance-group">
+        <div class="mtg-balance-pill">
+          <div class="lbl">Saldo Kas BCA</div>
+          <div class="val mono" id="headerBCA">Rp 0</div>
+        </div>
+        <div class="mtg-balance-pill">
+          <div class="lbl">Saldo Cash Kantor</div>
+          <div class="val mono" id="headerCash">Rp 0</div>
+        </div>
+        <div class="mtg-balance-pill total">
+          <div class="lbl">Saldo Kas Saat Ini</div>
+          <div class="val mono" id="headerSaldo">Rp 0</div>
+        </div>
       </div>
+      
     </div>
     <div class="mtg-tabs" id="mtgTabs"></div>
   </div>
@@ -309,15 +334,15 @@
 const SEED_DATA = {"ledger": [{"tanggal": "2026-05-01", "kategori": "Kas Awal", "klasifikasi": "Modal Awal", "keterangan": "Setoran modal awal pemilik", "akun": "BCA", "masuk": 50000000.0, "keluar": 0}], "trips": []};
 
 const MONTHS = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
-const KATEGORI_LIST = ["Kas Awal","Pemasukan","Pengeluaran"];
-const KLASIFIKASI_LIST = ["Modal Awal","Pemasukan Modal","Canvassing","Perlengkapan & Aset Kantor","Operasional Kantor","Transportasi & Kendaraan","Marketing & Branding","Konsumsi","Lain-lain"];
-const KLAS_EXPENSE_ONLY = KLASIFIKASI_LIST.filter(k => k !== "Modal Awal" && k !== "Pemasukan Modal");
+const KATEGORI_LIST = ["Kas Awal","Pemasukan","Pengeluaran", "Mutasi"]; // Ditambah Kategori Mutasi
+const KLASIFIKASI_LIST = ["Modal Awal","Pemasukan Modal","Canvassing","Perlengkapan & Aset Kantor","Operasional Kantor","Transportasi & Kendaraan","Marketing & Branding","Konsumsi","Mutasi","Lain-lain"];
+const KLAS_EXPENSE_ONLY = KLASIFIKASI_LIST.filter(k => k !== "Modal Awal" && k !== "Pemasukan Modal" && k !== "Mutasi");
 const AKUN_LIST = ["BCA","Cash"];
 const CANV_KATEGORI = ["Keluar Rekening","Perjalanan","Makan & Minum","Penginapan","Lain-lain"];
 const CANV_METODE = ["BCA","Cash","Flazz/Tunai"];
 const KLAS_COLORS = {
   "Canvassing":"#AD8A1E", "Perlengkapan & Aset Kantor":"#123324", "Operasional Kantor":"#1F7A5C",
-  "Transportasi & Kendaraan":"#B4472B", "Marketing & Branding":"#6B5CA5", "Konsumsi":"#2E86AB", "Lain-lain":"#8B95A0"
+  "Transportasi & Kendaraan":"#B4472B", "Marketing & Branding":"#6B5CA5", "Konsumsi":"#2E86AB", "Mutasi":"#5B6672", "Lain-lain":"#8B95A0"
 };
 
 let state = {
@@ -329,7 +354,6 @@ let state = {
   activeTripId: null,
   editingTxnId: null,
   editingTripExpenseId: null,
-  confirmDelete: null,
   isSyncing: false
 };
 
@@ -355,13 +379,13 @@ function escapeHtml(s){
   return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
-function setCloudStatus(status, text){
+function setCloudStatus(status){
   const el = document.getElementById('cloudStatus');
   if(!el) return;
   if(status === 'saving') { el.innerHTML = '⏳ Menyimpan...'; el.style.color = '#F4EAC9'; }
   else if(status === 'loading') { el.innerHTML = '🔄 Memuat...'; el.style.color = '#A2C9B6'; }
-  else if(status === 'error') { el.innerHTML = '⚠️ Offline / Gagal'; el.style.color = '#F2B8A8'; }
-  else { el.innerHTML = '🟢 Terkoneksi Cloud'; el.style.color = '#E1F0E9'; }
+  else if(status === 'error') { el.innerHTML = '⚠️ Gagal'; el.style.color = '#F2B8A8'; }
+  else { el.innerHTML = '🟢 Cloud Sync'; el.style.color = '#E1F0E9'; }
 }
 
 /* ---------------- Storage (Terkoneksi ke Google Sheets API) ---------------- */
@@ -371,7 +395,6 @@ async function loadData(silent = false){
   if(state.isSyncing) return;
   if(!silent) setCloudStatus('loading');
   try {
-    // Menambahkan ?t=Timestamp agar browser TIDAK mengambil CACHE LAMA
     const res = await fetch(SHEET_API_URL + "?t=" + Date.now());
     if (!res.ok) throw new Error("Status: " + res.status);
     const data = await res.json();
@@ -382,7 +405,6 @@ async function loadData(silent = false){
       expenses: tr.expenses.map(e => ({ id: uid(), ...e }))
     }));
 
-    // Auto-sync internal jika ada trip baru
     syncCanvassingToLedger();
     render();
     setCloudStatus('ok');
@@ -458,7 +480,7 @@ function syncCanvassingToLedger(){
         kategori: 'Pengeluaran',
         klasifikasi: 'Canvassing',
         keterangan: 'Canvassing ' + trip.nama + (trip.periode ? ' (' + trip.periode + ')' : ''),
-        akun: 'BCA',
+        akun: 'BCA', // Default sinkronisasi dari BCA
         masuk: 0,
         keluar: tot.totalRealisasi
       };
@@ -512,8 +534,9 @@ function kpis(){
   const withBal = ledgerWithBalance();
   const f = filteredLedger();
   
-  const masuk = f.reduce((s,r) => s + (Number(r.masuk)||0), 0);
-  const keluar = f.reduce((s,r) => s + (Number(r.keluar)||0), 0);
+  // NOTE: Transaksi Mutasi TIDAK dihitung dalam KPI Masuk & Keluar agar tidak menggelembungkan omset/pengeluaran palsu.
+  const masuk = f.reduce((s,r) => s + (r.kategori !== 'Mutasi' ? (Number(r.masuk)||0) : 0), 0);
+  const keluar = f.reduce((s,r) => s + (r.kategori !== 'Mutasi' ? (Number(r.keluar)||0) : 0), 0);
 
   let saldoAwal = 0;
   let saldoAkhirPeriode = 0;
@@ -558,14 +581,15 @@ function monthlyTrend(){
   const year = state.filterYear;
   const withBal = ledgerWithBalance();
   return MONTHS.map(bln => {
-    const rows = withBal.filter(r => yearOf(r.tanggal) === year && monthOf(r.tanggal) === bln);
+    // Mengecualikan transaksi 'Mutasi' dari grafik tren pengeluaran
+    const rows = withBal.filter(r => yearOf(r.tanggal) === year && monthOf(r.tanggal) === bln && r.kategori !== 'Mutasi');
     const masuk = rows.reduce((s,r)=>s+(Number(r.masuk)||0),0);
     const keluar = rows.reduce((s,r)=>s+(Number(r.keluar)||0),0);
     return { bulan: bln, masuk, keluar };
   });
 }
 function klasifikasiBreakdown(){
-  const f = filteredLedger().filter(r => r.kategori === 'Pengeluaran');
+  const f = filteredLedger().filter(r => r.kategori === 'Pengeluaran' && r.klasifikasi !== 'Mutasi');
   const map = {};
   KLAS_EXPENSE_ONLY.forEach(k => map[k] = 0);
   f.forEach(r => { map[r.klasifikasi] = (map[r.klasifikasi]||0) + (Number(r.keluar)||0); });
@@ -575,45 +599,29 @@ function klasifikasiBreakdown(){
     .sort((a,b) => b.jumlah - a.jumlah);
 }
 function topExpenses(n){
-  const f = filteredLedger().filter(r => r.kategori === 'Pengeluaran' && (Number(r.keluar)||0) > 0);
+  const f = filteredLedger().filter(r => r.kategori === 'Pengeluaran' && r.klasifikasi !== 'Mutasi' && (Number(r.keluar)||0) > 0);
   return [...f].sort((a,b) => (b.keluar||0) - (a.keluar||0)).slice(0, n);
 }
 
 /* ---------------- Logika Canvassing ---------------- */
 function tripTotals(trip){
   const ditarik = trip.expenses.reduce((s,e) => s + (Number(e.keluarRek)||0), 0);
-
   const realisasiCash = trip.expenses.reduce((s,e) => s + (e.metode === 'Cash' ? (Number(e.realisasi)||0) : 0), 0);
   const realisasiBCA = trip.expenses.reduce((s,e) => s + (e.metode === 'BCA' ? (Number(e.realisasi)||0) : 0), 0);
   const realisasiFlazz = trip.expenses.reduce((s,e) => s + (e.metode !== 'Cash' && e.metode !== 'BCA' ? (Number(e.realisasi)||0) : 0), 0);
-  
   const realisasiNonCash = realisasiBCA + realisasiFlazz;
   const totalRealisasi = realisasiCash + realisasiNonCash;
   const sisaCash = ditarik - realisasiCash;
 
-  return {
-    ditarik,          
-    realisasiCash,    
-    realisasiBCA,     
-    realisasiFlazz,   
-    realisasiNonCash, 
-    totalRealisasi,   
-    realisasi: totalRealisasi, 
-    sisaCash,         
-    sisa: sisaCash,   
-    pct: ditarik ? (realisasiCash / ditarik) : 0
-  };
+  return { ditarik, realisasiCash, realisasiBCA, realisasiFlazz, realisasiNonCash, totalRealisasi, sisaCash, pct: ditarik ? (realisasiCash / ditarik) : 0 };
 }
-
 function tripKategoriBreakdown(trip){
-  const map = {};
-  CANV_KATEGORI.forEach(k => map[k]=0);
+  const map = {}; CANV_KATEGORI.forEach(k => map[k]=0);
   trip.expenses.forEach(e => { map[e.kategori] = (map[e.kategori]||0) + (Number(e.keluarRek)||0) + (Number(e.realisasi)||0); });
   return CANV_KATEGORI.map(k => ({ kategori:k, jumlah: map[k] }));
 }
 function tripMetodeBreakdown(trip){
-  const map = {};
-  CANV_METODE.forEach(k => map[k]=0);
+  const map = {}; CANV_METODE.forEach(k => map[k]=0);
   trip.expenses.forEach(e => { map[e.metode] = (map[e.metode]||0) + (Number(e.keluarRek)||0) + (Number(e.realisasi)||0); });
   return CANV_METODE.map(k => ({ metode:k, jumlah: map[k] }));
 }
@@ -641,9 +649,17 @@ function renderDashboard(){
   const k = kpis();
   const trend = monthlyTrend();
   const klas = klasifikasiBreakdown();
-  const top10 = topExpenses(10);
+  
+  // Mengambil SEMUA Pengeluaran pada periode berjalan (kecuali mutasi internal)
+  const fExpenses = filteredLedger().filter(r => r.kategori === 'Pengeluaran' && r.klasifikasi !== 'Mutasi');
+  fExpenses.sort((a,b) => a.tanggal < b.tanggal ? 1 : (a.tanggal > b.tanggal ? -1 : 0));
 
   const html = `
+    <div class="mtg-toolbar" style="margin-bottom:14px;">
+       <div class="mtg-section-title" style="margin:0;"><span class="bar"></span>Ringkasan Laporan & Filter</div>
+       <button class="mtg-btn mtg-btn-gold mtg-btn-sm" id="btnDownloadDashboard">⬇ Download Laporan PDF</button>
+    </div>
+
     <div class="mtg-filterbar">
       <div class="mtg-filter-group">
         <label>Tahun</label>
@@ -658,7 +674,7 @@ function renderDashboard(){
           ${MONTHS.map(m => `<option value="${m}" ${m===state.filterMonth?'selected':''}>${m}</option>`).join('')}
         </select>
       </div>
-      <div class="mtg-filter-note">Seluruh kartu, grafik, dan tabel otomatis mengikuti filter ini.</div>
+      <div class="mtg-filter-note">Seluruh kartu, grafik, dan tabel otomatis mengikuti filter ini. Transaksi mutasi tidak dihitung sebagai Pemasukan/Pengeluaran riil di sini.</div>
     </div>
 
     <div class="mtg-kpi-grid">
@@ -682,49 +698,40 @@ function renderDashboard(){
 
     <div class="mtg-section-title"><span class="bar"></span>Tren Bulanan — ${state.filterYear}</div>
     <div class="mtg-chart-grid">
-      <div class="mtg-chart-card"><h4>Kas Masuk vs Kas Keluar per Bulan</h4><div class="chart-box" id="boxTrendBar"><canvas id="chartTrendBar"></canvas></div></div>
-      <div class="mtg-chart-card"><h4>Tren Saldo Kas Bulanan</h4><div class="chart-box" id="boxTrendLine"><canvas id="chartTrendLine"></canvas></div></div>
+      <!-- Diubah hanya menjadi Tren Kas Keluar -->
+      <div class="mtg-chart-card"><h4>Tren Kas Keluar Bulanan</h4><div class="chart-box" id="boxTrendBar"><canvas id="chartTrendBar"></canvas></div></div>
+      <div class="mtg-chart-card"><h4>Tren Saldo Kas Total Bulanan</h4><div class="chart-box" id="boxTrendLine"><canvas id="chartTrendLine"></canvas></div></div>
     </div>
 
-    <div class="mtg-section-title"><span class="bar"></span>Rincian Pengeluaran — ${state.filterMonth==='Semua' ? 'Tahun ' + state.filterYear : state.filterMonth + ' ' + state.filterYear}</div>
+    <div class="mtg-section-title"><span class="bar"></span>Rincian Analisis Pengeluaran — ${state.filterMonth==='Semua' ? 'Tahun ' + state.filterYear : state.filterMonth + ' ' + state.filterYear}</div>
     <div class="mtg-chart-grid">
       <div class="mtg-chart-card"><h4>Proporsi per Klasifikasi</h4><div class="chart-box" id="boxKlasPie"><canvas id="chartKlasPie"></canvas></div></div>
       <div class="mtg-chart-card"><h4>Peringkat Klasifikasi (Terbesar → Terkecil)</h4><div class="chart-box" id="boxKlasBar"><canvas id="chartKlasBar"></canvas></div></div>
     </div>
-
-    <div class="mtg-chart-grid" style="margin-top:14px;">
-      <div class="mtg-chart-card">
-        <h4>Rincian per Klasifikasi</h4>
-        <div class="mtg-table-scroll">
-          <table class="mtg-table">
-            <thead><tr><th>Klasifikasi</th><th style="text-align:right;">Jumlah</th><th style="text-align:right;">%</th></tr></thead>
-            <tbody>
-              ${klas.map(row => `
-                <tr>
-                  <td><span class="klas-chip" style="background:${KLAS_COLORS[row.klas]}22;color:${KLAS_COLORS[row.klas]}">${row.klas}</span></td>
-                  <td class="num">${fmtRp(row.jumlah)}</td>
-                  <td class="num">${(row.pct*100).toFixed(1)}%</td>
-                </tr>`).join('') || `<tr><td colspan="3" class="mtg-empty">Tidak ada data pengeluaran pada periode ini.</td></tr>`}
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div class="mtg-chart-card">
-        <h4>Top 10 Pengeluaran Terbesar</h4>
-        <div class="mtg-table-scroll">
-          <table class="mtg-table">
-            <thead><tr><th>#</th><th>Tanggal</th><th>Keterangan</th><th style="text-align:right;">Jumlah</th></tr></thead>
-            <tbody>
-              ${top10.map((row,i) => `
-                <tr>
-                  <td><span class="rank-badge">${i+1}</span></td>
-                  <td>${fmtDate(row.tanggal)}</td>
-                  <td>${escapeHtml(row.keterangan)}</td>
-                  <td class="num">${fmtRp(row.keluar)}</td>
-                </tr>`).join('') || `<tr><td colspan="4" class="mtg-empty">Tidak ada data pengeluaran pada periode ini.</td></tr>`}
-            </tbody>
-          </table>
-        </div>
+    
+    <!-- TABEL SELURUH RINCIAN PENGELUARAN (TIDAK DIKELOMPOKKAN) -->
+    <div class="mtg-chart-card" style="margin-top:14px;">
+      <h4>Tabel Rincian Seluruh Pengeluaran Periode Ini</h4>
+      <div class="mtg-table-scroll" style="max-height:450px; overflow-y:auto;">
+        <table class="mtg-table">
+          <thead><tr>
+            <th>Tanggal</th>
+            <th>Klasifikasi</th>
+            <th>Keterangan</th>
+            <th>Akun Asal</th>
+            <th style="text-align:right;">Jumlah (Keluar)</th>
+          </tr></thead>
+          <tbody>
+            ${fExpenses.map(row => `
+              <tr>
+                <td>${fmtDate(row.tanggal)}</td>
+                <td><span class="klas-chip">${row.klasifikasi}</span></td>
+                <td style="white-space:normal; min-width:180px;">${escapeHtml(row.keterangan)}</td>
+                <td>${row.akun}</td>
+                <td class="num">${fmtRp(row.keluar)}</td>
+              </tr>`).join('') || `<tr><td colspan="5" class="mtg-empty">Tidak ada data pengeluaran pada periode ini.</td></tr>`}
+          </tbody>
+        </table>
       </div>
     </div>
   `;
@@ -735,7 +742,96 @@ function renderDashboard(){
 
   setTimeout(() => {
     drawDashboardCharts(trend, klas);
+    
+    // Bind tombol Download
+    const btnDl = document.getElementById('btnDownloadDashboard');
+    if(btnDl) btnDl.addEventListener('click', generateDashboardPDF);
   }, 50);
+}
+
+/* ---------------- FITUR DOWNLOAD LAPORAN DASHBOARD PDF ---------------- */
+function generateDashboardPDF() {
+  try {
+    if(!window.jspdf || !window.jspdf.jsPDF){
+      alert('Modul PDF belum siap dimuat. Coba lagi sesaat lagi.');
+      return;
+    }
+    
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation:'portrait', unit:'pt', format:'a4' });
+    
+    const periodeTxt = state.filterMonth === 'Semua' ? 'Tahun ' + state.filterYear : state.filterMonth + ' ' + state.filterYear;
+    
+    const k = kpis();
+    // Ambil data detail pengeluaran untuk tabel
+    const fExpenses = filteredLedger().filter(r => r.kategori === 'Pengeluaran' && r.klasifikasi !== 'Mutasi');
+    const rows = fExpenses.sort((a,b)=> a.tanggal < b.tanggal ? -1 : (a.tanggal>b.tanggal?1:0));
+
+    const marginX = 40;
+    let y = 50;
+
+    // Header Laporan
+    doc.setFont('helvetica','bold'); doc.setFontSize(16); doc.setTextColor(18,51,36);
+    doc.text('Laporan Arus Kas MTG', marginX, y);
+    y += 18;
+    doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.setTextColor(90,100,110);
+    doc.text('Periode: ' + periodeTxt, marginX, y);
+    doc.text('Dicetak: ' + new Date().toLocaleDateString('id-ID', {day:'2-digit',month:'long',year:'numeric'}), 400, y);
+    y += 20;
+
+    doc.setDrawColor(224,227,219);
+    doc.line(marginX, y, 555, y);
+    y += 20;
+
+    // KPI Boxes
+    const boxes = [
+      ['Saldo Awal', fmtRp(k.saldoAwal)],
+      ['Kas Masuk', fmtRp(k.masuk)],
+      ['Kas Keluar', fmtRp(k.keluar)],
+      ['Saldo Akhir', fmtRp(k.saldoAkhirPeriode)]
+    ];
+    
+    const boxW = 115, boxH = 46;
+    boxes.forEach((b, i) => {
+      const bx = marginX + i*(boxW+6);
+      doc.setFillColor(i===3 ? 236 : 244, i===3 ? 238 : 245, i===3 ? 232 : 240);
+      doc.roundedRect(bx, y, boxW, boxH, 4, 4, 'F');
+      doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.setTextColor(i===3 ? 18 : 91, i===3 ? 51 : 102, i===3 ? 36 : 114);
+      doc.text(b[0].toUpperCase(), bx+8, y+16);
+      doc.setFont('helvetica','bold'); doc.setFontSize(10.5); doc.setTextColor(18,51,36);
+      doc.text(b[1], bx+8, y+34);
+    });
+    y += boxH + 28;
+
+    // Judul Tabel
+    doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(18,51,36);
+    doc.text('Rincian Seluruh Pengeluaran Periode Ini', marginX, y);
+    
+    // AutoTable untuk rincian
+    doc.autoTable({
+      startY: y+8, margin:{left:marginX, right:40},
+      head:[['Tanggal','Klasifikasi','Keterangan','Akun','Jumlah (IDR)']],
+      body: rows.map(e => [
+        fmtDate(e.tanggal), e.klasifikasi, e.keterangan, e.akun, fmtRp(e.keluar)
+      ]),
+      styles:{ font:'helvetica', fontSize:8.5, cellPadding:4.5, overflow:'linebreak' },
+      headStyles:{ fillColor:[18,51,36], textColor:255, fontSize:8.5 },
+      columnStyles:{ 4:{ halign:'right' } },
+      theme:'grid',
+      didDrawPage: (data) => {
+        const pageCount = doc.internal.getNumberOfPages();
+        doc.setFontSize(8); doc.setTextColor(139,149,160);
+        doc.text('Arus Kas MTG — Laporan ' + periodeTxt, marginX, 820);
+        doc.text('Hal. ' + doc.internal.getCurrentPageInfo().pageNumber + ' / ' + pageCount, 500, 820);
+      }
+    });
+
+    const safeName = periodeTxt.replace(/[^a-z0-9]+/gi,'_');
+    doc.save('Laporan_Bulanan_MTG_' + safeName + '.pdf');
+  } catch(err) {
+    console.error('Gagal membuat PDF:', err);
+    alert('Gagal membuat PDF. Silakan coba lagi.');
+  }
 }
 
 function destroyChart(key){
@@ -768,13 +864,14 @@ function drawDashboardCharts(trend, klas, retries = 0){
         type:'bar',
         data:{ labels: trend.map(t=>t.bulan.slice(0,3)),
           datasets:[
-            {label:'Kas Masuk', data: trend.map(t=>t.masuk), backgroundColor:'#1F7A5C', borderRadius:4},
+            // Dihapus (KAS MASUK) untuk menyesuaikan fokus ke Kas Keluar Saja
             {label:'Kas Keluar', data: trend.map(t=>t.keluar), backgroundColor:'#B4472B', borderRadius:4},
           ]},
         options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'bottom', labels:{boxWidth:10,font:{size:11}}}},
           scales:{ y:{ ticks:{ callback:v=>fmtRp(v) , font:{size:10}} }, x:{ ticks:{font:{size:10}} } } }
       });
     }
+    
     const ctxLine = document.getElementById('chartTrendLine');
     if(ctxLine){
       let running = 0;
@@ -782,12 +879,13 @@ function drawDashboardCharts(trend, klas, retries = 0){
       chartRegistry['chartTrendLine'] = new Chart(ctxLine, {
         type:'line',
         data:{ labels: trend.map(t=>t.bulan.slice(0,3)),
-          datasets:[{ label:'Saldo', data: saldoSeries, borderColor:'#AD8A1E', backgroundColor:'#AD8A1E33',
+          datasets:[{ label:'Saldo Total', data: saldoSeries, borderColor:'#AD8A1E', backgroundColor:'#AD8A1E33',
             tension:.3, fill:true, pointRadius:3 }]},
         options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
           scales:{ y:{ ticks:{ callback:v=>fmtRp(v), font:{size:10} } }, x:{ ticks:{font:{size:10}} } } }
       });
     }
+    
     const ctxPie = document.getElementById('chartKlasPie');
     if(ctxPie){
       const nz = klas.filter(k=>k.jumlah>0);
@@ -798,6 +896,7 @@ function drawDashboardCharts(trend, klas, retries = 0){
         options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'bottom', labels:{boxWidth:10,font:{size:10}}}} }
       });
     }
+    
     const ctxKBar = document.getElementById('chartKlasBar');
     if(ctxKBar){
       const nz = klas.filter(k=>k.jumlah>0);
@@ -821,7 +920,10 @@ function renderLedger(){
   const html = `
     <div class="mtg-toolbar">
       <div style="font-size:13px;color:var(--ink-soft);">${state.ledger.length} transaksi tercatat</div>
-      <button class="mtg-btn mtg-btn-primary" id="btnNewTxn">+ Tambah Transaksi</button>
+      <div style="display:flex; gap:8px;">
+        <button class="mtg-btn mtg-btn-gold" id="btnMutasi">↔ Mutasi Saldo</button>
+        <button class="mtg-btn mtg-btn-primary" id="btnNewTxn">+ Tambah Transaksi</button>
+      </div>
     </div>
     <div id="txnFormSlot"></div>
     <div class="mtg-table-wrap" style="margin-top:14px;">
@@ -830,13 +932,20 @@ function renderLedger(){
           <thead><tr>
             <th>Tanggal</th><th>Kategori</th><th>Klasifikasi</th><th>Keterangan</th><th>Akun</th>
             <th style="text-align:right;">Kas Masuk</th><th style="text-align:right;">Kas Keluar</th>
-            <th style="text-align:right;">Saldo</th><th></th>
+            <th style="text-align:right;">Saldo Total</th><th></th>
           </tr></thead>
           <tbody>
-            ${withBal.map(row => `
+            ${withBal.map(row => {
+              let tagKategori = '';
+              if(row.kategori === 'Mutasi') tagKategori = 'tag-mutasi';
+              else if(row.kategori === 'Pengeluaran') tagKategori = 'tag-keluar';
+              else if(row.kategori === 'Kas Awal') tagKategori = 'tag-awal';
+              else tagKategori = 'tag-masuk';
+              
+              return `
               <tr class="${row.saldo<0?'neg-row':''}">
                 <td>${fmtDate(row.tanggal)}</td>
-                <td><span class="tag ${row.kategori==='Pengeluaran'?'tag-keluar':(row.kategori==='Kas Awal'?'tag-awal':'tag-masuk')}">${row.kategori}</span></td>
+                <td><span class="tag ${tagKategori}">${row.kategori}</span></td>
                 <td><span class="klas-chip">${row.klasifikasi}</span></td>
                 <td>${escapeHtml(row.keterangan)} ${row.id && row.id.startsWith('sync_trip_') ? '<small style="color:var(--gold); font-weight:600;">(Auto-Sync)</small>' : ''}</td>
                 <td>${row.akun}</td>
@@ -847,7 +956,8 @@ function renderLedger(){
                   <button class="mtg-icon-btn" data-edit="${row.id}" title="Edit">✎</button>
                   <button class="mtg-icon-btn" data-del="${row.id}" title="Hapus">🗑</button>
                 </td>
-              </tr>`).join('') || `<tr><td colspan="9" class="mtg-empty">Belum ada transaksi.</td></tr>`}
+              </tr>`
+            }).join('') || `<tr><td colspan="9" class="mtg-empty">Belum ada transaksi.</td></tr>`}
           </tbody>
         </table>
       </div>
@@ -855,9 +965,8 @@ function renderLedger(){
   `;
   document.getElementById('mtgBody').innerHTML = html;
 
-  document.getElementById('btnNewTxn').addEventListener('click', () => {
-    state.editingTxnId = 'new'; renderTxnForm();
-  });
+  document.getElementById('btnMutasi').addEventListener('click', showMutasiModal);
+  document.getElementById('btnNewTxn').addEventListener('click', () => { state.editingTxnId = 'new'; renderTxnForm(); });
   document.querySelectorAll('[data-edit]').forEach(btn => {
     btn.addEventListener('click', () => { state.editingTxnId = btn.dataset.edit; renderTxnForm(); window.scrollTo({top:0,behavior:'smooth'}); });
   });
@@ -866,6 +975,99 @@ function renderLedger(){
   });
 
   if(state.editingTxnId) renderTxnForm();
+}
+
+/* ---------------- FITUR MUTASI SALDO ---------------- */
+function showMutasiModal(){
+  const overlay = document.createElement('div');
+  overlay.className = 'mtg-modal-overlay';
+  overlay.innerHTML = `
+    <div class="mtg-modal">
+      <h3>Mutasi Pindah Saldo</h3>
+      <p>Pindahkan dana secara internal. Transaksi ini tidak akan dihitung sebagai Laba/Rugi bulanan perusahaan.</p>
+      
+      <div class="mtg-field" style="margin-bottom:12px;">
+        <label>Tanggal Mutasi</label>
+        <input type="date" class="mtg-input" id="mTanggal" value="${new Date().toISOString().slice(0,10)}">
+      </div>
+      
+      <div class="mtg-form-grid" style="grid-template-columns:1fr 1fr; margin-bottom:12px;">
+        <div class="mtg-field">
+          <label>Dari Rekening/Kas</label>
+          <select class="mtg-input" id="mDari">
+            <option value="BCA">BCA</option>
+            <option value="Cash">Cash Kantor</option>
+          </select>
+        </div>
+        <div class="mtg-field">
+          <label>Dipindah Ke</label>
+          <select class="mtg-input" id="mKe">
+            <option value="Cash" selected>Cash Kantor</option>
+            <option value="BCA">BCA</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="mtg-field" style="margin-bottom:12px;">
+        <label>Nominal (IDR)</label>
+        <input type="number" class="mtg-input" id="mJumlah" min="0" placeholder="Contoh: 500000">
+      </div>
+      
+      <div class="mtg-field" style="margin-bottom:18px;">
+        <label>Keterangan</label>
+        <input class="mtg-input" id="mKeterangan" value="Tarik Tunai Keperluan Kantor" placeholder="cth. Tarik tunai ke Kas">
+      </div>
+      
+      <div class="mtg-form-actions">
+        <button class="mtg-btn mtg-btn-ghost" id="mCancel">Batal</button>
+        <button class="mtg-btn mtg-btn-primary" id="mSave">Proses Mutasi</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+
+  // Auto-toggle dropdown "Dari" dan "Ke" agar tidak sama
+  document.getElementById('mDari').addEventListener('change', (e) => {
+    document.getElementById('mKe').value = e.target.value === 'BCA' ? 'Cash' : 'BCA';
+  });
+  document.getElementById('mKe').addEventListener('change', (e) => {
+    document.getElementById('mDari').value = e.target.value === 'BCA' ? 'Cash' : 'BCA';
+  });
+
+  document.getElementById('mCancel').addEventListener('click', () => overlay.remove());
+  overlay.addEventListener('click', (ev) => { if(ev.target === overlay) overlay.remove(); });
+  
+  document.getElementById('mSave').addEventListener('click', async () => {
+    const tgl = document.getElementById('mTanggal').value;
+    const dari = document.getElementById('mDari').value;
+    const ke = document.getElementById('mKe').value;
+    const jumlah = Number(document.getElementById('mJumlah').value) || 0;
+    const ket = document.getElementById('mKeterangan').value.trim();
+
+    if(!tgl || jumlah <= 0 || dari === ke){
+      alert('Mohon lengkapi nominal dan pastikan akun tujuan berbeda.'); return;
+    }
+
+    const baseId = uid();
+
+    // Baris 1: Uang Keluar dari Akun Asal
+    state.ledger.push({
+      id: baseId + '_out', tanggal: tgl,
+      kategori: 'Mutasi', klasifikasi: 'Mutasi', keterangan: ket + ` (Keluar dari ${dari})`,
+      akun: dari, masuk: 0, keluar: jumlah
+    });
+
+    // Baris 2: Uang Masuk ke Akun Tujuan
+    state.ledger.push({
+      id: baseId + '_in', tanggal: tgl,
+      kategori: 'Mutasi', klasifikasi: 'Mutasi', keterangan: ket + ` (Masuk ke ${ke})`,
+      akun: ke, masuk: jumlah, keluar: 0
+    });
+
+    overlay.remove();
+    await saveLedger();
+    render();
+  });
 }
 
 function renderTxnForm(){
@@ -1221,7 +1423,7 @@ function confirmAndDeleteExpense(trip, expId){
   });
 }
 
-/* ---------------- PDF export ---------------- */
+/* ---------------- PDF export Trip ---------------- */
 function generateTripPDF(trip){
   try{
     if(!window.jspdf || !window.jspdf.jsPDF){
@@ -1359,10 +1561,27 @@ function showConfirmModal(title, msg, onConfirm){
 /* ---------------- Master render ---------------- */
 function render(){
   renderTabs();
-  const withBal = ledgerWithBalance();
-  const saldo = withBal.length ? withBal[withBal.length-1].saldo : 0;
-  const pill = document.getElementById('headerSaldo');
-  if(pill){ pill.textContent = fmtRp(saldo); pill.style.color = saldo < 0 ? '#F2B8A8' : '#fff'; }
+  
+  // Hitung Saldo Dinamis (Total, BCA, Cash)
+  let sTotal = 0;
+  let sBCA = 0;
+  let sCash = 0;
+
+  sortedLedger().forEach(r => {
+    const net = (Number(r.masuk)||0) - (Number(r.keluar)||0);
+    sTotal += net;
+    if (r.akun === 'BCA') sBCA += net;
+    if (r.akun === 'Cash') sCash += net;
+  });
+
+  const pt = document.getElementById('headerSaldo');
+  if(pt){ pt.textContent = fmtRp(sTotal); pt.style.color = sTotal < 0 ? '#F2B8A8' : '#fff'; }
+  
+  const pb = document.getElementById('headerBCA');
+  if(pb){ pb.textContent = fmtRp(sBCA); pb.style.color = sBCA < 0 ? '#F2B8A8' : '#fff'; }
+  
+  const pc = document.getElementById('headerCash');
+  if(pc){ pc.textContent = fmtRp(sCash); pc.style.color = sCash < 0 ? '#F2B8A8' : '#fff'; }
 
   if(state.activeTab === 'dashboard') renderDashboard();
   else if(state.activeTab === 'ledger') renderLedger();
@@ -1375,15 +1594,12 @@ async function init(){
   state.filterYear = years[years.length-1] || new Date().getFullYear();
   render();
 
-  // Event Manual Refresh Button
   const refreshBtn = document.getElementById('btnManualRefresh');
   if(refreshBtn) {
     refreshBtn.addEventListener('click', () => loadData(false));
   }
 
-  // AUTO-POLLING: Cek data dari Google Sheets setiap 15 detik secara background
   setInterval(() => {
-    // Jangan overwrite jika user sedang dalam posisi mengedit formulir
     if (!state.editingTxnId && !state.editingTripExpenseId && !state.isSyncing) {
       loadData(true);
     }
