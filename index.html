@@ -1,257 +1,291 @@
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
-
-:root{
-  --bg:#F4F5F0;
-  --surface:#FFFFFF;
-  --surface-alt:#ECEEE8;
-  --ink:#16212B;
-  --ink-soft:#5B6672;
-  --ink-faint:#8B95A0;
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Arus Kas MTG</title>
   
-  /* MENGUBAH WARNA UTAMA HEADER MENJADI HIJAU TUA (DEEP FOREST GREEN) */
-  --navy:#123324;
-  --navy-soft:#1D4A37;
+  <style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
+
+  :root{
+    --bg:#F4F5F0;
+    --surface:#FFFFFF;
+    --surface-alt:#ECEEE8;
+    --ink:#16212B;
+    --ink-soft:#5B6672;
+    --ink-faint:#8B95A0;
+    --navy:#123324; /* Hijau Tua */
+    --navy-soft:#1D4A37;
+    --gold:#AD8A1E;
+    --gold-soft:#F4EAC9;
+    --emerald:#1F7A5C;
+    --emerald-soft:#E1F0E9;
+    --rust:#B4472B;
+    --rust-soft:#F6E4DD;
+    --border:#E0E3DB;
+    --radius:12px;
+    --shadow:0 1px 2px rgba(18,41,61,0.06), 0 4px 16px rgba(18,41,61,0.05);
+  }
+  *{box-sizing:border-box;}
+  body, html { margin:0; padding:0; background:var(--bg); }
+
+  .mtg-app{
+    font-family:'Inter',system-ui,sans-serif;
+    color:var(--ink);
+    background:var(--bg);
+    min-height:100vh;
+    padding:0;
+    line-height:1.4;
+  }
+  .mtg-app h1,.mtg-app h2,.mtg-app h3{
+    font-family:'Space Grotesk',system-ui,sans-serif;
+    margin:0;
+    letter-spacing:-0.01em;
+  }
+  .mono{font-family:'IBM Plex Mono',monospace;}
+
+  /* ---------- Header ---------- */
+  .mtg-header{
+    background:var(--navy);
+    color:#fff;
+    padding:22px 28px 0 28px;
+    border-radius:0 0 16px 16px;
+  }
+  .mtg-header-top{
+    display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap;
+  }
+  .mtg-brand{display:flex; align-items:center; gap:12px;}
+  .mtg-brand-mark{
+    width:42px;height:42px;border-radius:10px;
+    background:linear-gradient(135deg,var(--gold) 0%, #8a6d10 100%);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Space Grotesk';font-weight:700;font-size:16px;color:#fff;
+    flex-shrink:0; box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  .mtg-brand-img{
+    height:42px; width:auto; max-width:120px; object-fit:contain; border-radius:8px;
+  }
+  .mtg-brand-title{font-size:20px;font-weight:700;color:#fff;}
+  .mtg-brand-sub{font-size:12.5px;color:#A2C9B6;margin-top:2px;display:flex;align-items:center;gap:8px;}
   
-  --gold:#AD8A1E;
-  --gold-soft:#F4EAC9;
-  --emerald:#1F7A5C;
-  --emerald-soft:#E1F0E9;
-  --rust:#B4472B;
-  --rust-soft:#F6E4DD;
-  --border:#E0E3DB;
-  --radius:12px;
-  --shadow:0 1px 2px rgba(18,41,61,0.06), 0 4px 16px rgba(18,41,61,0.05);
-}
-*{box-sizing:border-box;}
-.mtg-app{
-  font-family:'Inter',system-ui,sans-serif;
-  color:var(--ink);
-  background:var(--bg);
-  min-height:100%;
-  padding:0;
-  line-height:1.4;
-}
-.mtg-app h1,.mtg-app h2,.mtg-app h3{
-  font-family:'Space Grotesk',system-ui,sans-serif;
-  margin:0;
-  letter-spacing:-0.01em;
-}
-.mono{font-family:'IBM Plex Mono',monospace;}
+  /* Status Indikator Cloud Sync */
+  .mtg-sync-status{
+    font-size:11px; padding:2px 8px; border-radius:99px; background:rgba(255,255,255,0.12); color:#E1F0E9;
+    display:inline-flex; align-items:center; gap:4px; transition:all .3s ease;
+  }
+  .mtg-sync-btn{
+    background:transparent; border:none; color:#A2C9B6; cursor:pointer; font-size:13px; padding:2px 6px; border-radius:4px;
+  }
+  .mtg-sync-btn:hover{ color:#fff; background:rgba(255,255,255,0.1); }
 
-/* ---------- Header Hijau Tua ---------- */
-.mtg-header{
-  background:var(--navy);
-  color:#fff;
-  padding:22px 28px 0 28px;
-  border-radius:16px 16px 0 0;
-}
-.mtg-header-top{
-  display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap;
-}
-.mtg-brand{display:flex; align-items:center; gap:12px;}
-.mtg-brand-mark{
-  width:42px;height:42px;border-radius:10px;
-  background:linear-gradient(135deg,var(--gold) 0%, #8a6d10 100%);
-  display:flex;align-items:center;justify-content:center;
-  font-family:'Space Grotesk';font-weight:700;font-size:16px;color:#fff;
-  flex-shrink:0; box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-}
-.mtg-brand-img{
-  height:42px; width:auto; max-width:120px; object-fit:contain; border-radius:8px;
-}
-.mtg-brand-title{font-size:20px;font-weight:700;color:#fff;}
-.mtg-brand-sub{font-size:12.5px;color:#A2C9B6;margin-top:2px;}
-.mtg-balance-pill{
-  background:rgba(255,255,255,0.08);
-  border:1px solid rgba(255,255,255,0.14);
-  border-radius:10px; padding:10px 16px; text-align:right;
-}
-.mtg-balance-pill .lbl{font-size:11px;color:#A2C9B6;text-transform:uppercase;letter-spacing:.05em;}
-.mtg-balance-pill .val{font-family:'IBM Plex Mono';font-size:20px;font-weight:600;color:#fff;margin-top:2px;}
+  .mtg-balance-pill{
+    background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.14);
+    border-radius:10px; padding:10px 16px; text-align:right;
+  }
+  .mtg-balance-pill .lbl{font-size:11px;color:#A2C9B6;text-transform:uppercase;letter-spacing:.05em;}
+  .mtg-balance-pill .val{font-family:'IBM Plex Mono';font-size:20px;font-weight:600;color:#fff;margin-top:2px;}
 
-.mtg-tabs{display:flex;gap:4px;margin-top:20px;}
-.mtg-tab{
-  padding:11px 18px; border-radius:10px 10px 0 0; cursor:pointer;
-  font-size:13.5px; font-weight:600; color:#A2C9B6; background:transparent;
-  border:none; transition:all .15s ease; display:flex; align-items:center; gap:7px;
-}
-.mtg-tab:hover{color:#fff; background:rgba(255,255,255,0.06);}
-.mtg-tab.active{color:var(--navy); background:var(--bg);}
+  .mtg-tabs{display:flex;gap:4px;margin-top:20px;overflow-x:auto;padding-bottom:2px;}
+  .mtg-tab{
+    padding:11px 18px; border-radius:10px 10px 0 0; cursor:pointer;
+    font-size:13.5px; font-weight:600; color:#A2C9B6; background:transparent;
+    border:none; transition:all .15s ease; display:flex; align-items:center; gap:7px; white-space:nowrap;
+  }
+  .mtg-tab:hover{color:#fff; background:rgba(255,255,255,0.06);}
+  .mtg-tab.active{color:var(--navy); background:var(--bg);}
 
-/* ---------- Body ---------- */
-.mtg-body{padding:22px 28px 32px 28px;}
-.mtg-section-title{
-  font-size:15px; font-weight:600; color:var(--navy); margin:26px 0 12px 0;
-  display:flex; align-items:center; gap:8px;
-}
-.mtg-section-title .bar{width:4px;height:16px;background:var(--gold);border-radius:2px;display:inline-block;}
-.mtg-section-title:first-child{margin-top:0;}
+  /* ---------- Body ---------- */
+  .mtg-body{padding:22px 28px 32px 28px;}
+  .mtg-section-title{
+    font-size:15px; font-weight:600; color:var(--navy); margin:26px 0 12px 0;
+    display:flex; align-items:center; gap:8px;
+  }
+  .mtg-section-title .bar{width:4px;height:16px;background:var(--gold);border-radius:2px;display:inline-block;}
+  .mtg-section-title:first-child{margin-top:0;}
 
-/* ---------- Filter bar ---------- */
-.mtg-filterbar{
-  background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
-  padding:14px 18px; display:flex; align-items:center; gap:18px; flex-wrap:wrap; box-shadow:var(--shadow);
-}
-.mtg-filter-group{display:flex; align-items:center; gap:8px;}
-.mtg-filter-group label{font-size:12.5px; font-weight:600; color:var(--ink-soft);}
-.mtg-select{
-  border:1px solid var(--border); border-radius:8px; padding:7px 12px; font-size:13.5px;
-  font-family:'Inter'; background:#fff; color:var(--ink); font-weight:600; cursor:pointer;
-}
-.mtg-filter-note{font-size:12px; color:var(--ink-faint); margin-left:auto;}
+  /* ---------- Filter bar ---------- */
+  .mtg-filterbar{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+    padding:14px 18px; display:flex; align-items:center; gap:18px; flex-wrap:wrap; box-shadow:var(--shadow);
+  }
+  .mtg-filter-group{display:flex; align-items:center; gap:8px;}
+  .mtg-filter-group label{font-size:12.5px; font-weight:600; color:var(--ink-soft);}
+  .mtg-select{
+    border:1px solid var(--border); border-radius:8px; padding:7px 12px; font-size:13.5px;
+    font-family:'Inter'; background:#fff; color:var(--ink); font-weight:600; cursor:pointer;
+  }
+  .mtg-filter-note{font-size:12px; color:var(--ink-faint); margin-left:auto;}
 
-/* ---------- KPI cards ---------- */
-.mtg-kpi-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:14px;}
-.mtg-kpi-card{
-  background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
-  padding:16px 18px; box-shadow:var(--shadow); position:relative; overflow:hidden;
-}
-.mtg-kpi-card::before{
-  content:''; position:absolute; top:0; left:0; width:100%; height:3px;
-}
-.mtg-kpi-card.masuk::before{background:var(--emerald);}
-.mtg-kpi-card.keluar::before{background:var(--rust);}
-.mtg-kpi-card.selisih::before{background:var(--gold);}
-.mtg-kpi-card.saldo::before{background:var(--navy);}
-.mtg-kpi-label{font-size:12px; font-weight:600; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.04em;}
-.mtg-kpi-value{font-family:'IBM Plex Mono'; font-size:22px; font-weight:600; margin-top:8px; color:var(--ink);}
-.mtg-kpi-value.neg{color:var(--rust);}
+  /* ---------- KPI cards ---------- */
+  .mtg-kpi-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:14px;}
+  .mtg-kpi-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+    padding:16px 18px; box-shadow:var(--shadow); position:relative; overflow:hidden;
+  }
+  .mtg-kpi-card::before{
+    content:''; position:absolute; top:0; left:0; width:100%; height:3px;
+  }
+  .mtg-kpi-card.masuk::before{background:var(--emerald);}
+  .mtg-kpi-card.keluar::before{background:var(--rust);}
+  .mtg-kpi-card.selisih::before{background:var(--gold);}
+  .mtg-kpi-card.saldo::before{background:var(--navy);}
+  .mtg-kpi-label{font-size:12px; font-weight:600; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.04em;}
+  .mtg-kpi-value{font-family:'IBM Plex Mono'; font-size:20px; font-weight:600; margin-top:8px; color:var(--ink);}
+  .mtg-kpi-value.neg{color:var(--rust);}
 
-/* ---------- Charts grid ---------- */
-.mtg-chart-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:14px;}
-.mtg-chart-card{
-  background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
-  padding:16px 18px; box-shadow:var(--shadow);
-}
-.mtg-chart-card h4{font-size:13px; font-weight:600; color:var(--navy); margin-bottom:10px;}
-.chart-box{position:relative; height:230px; width:100%; display:flex; align-items:center; justify-content:center;}
-.chart-box canvas{max-height:none !important; width:100% !important;}
+  /* ---------- Charts grid ---------- */
+  .mtg-chart-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:14px;}
+  .mtg-chart-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+    padding:16px 18px; box-shadow:var(--shadow);
+  }
+  .mtg-chart-card h4{font-size:13px; font-weight:600; color:var(--navy); margin-bottom:10px;}
+  .chart-box{position:relative; height:230px; width:100%; display:flex; align-items:center; justify-content:center;}
+  .chart-box canvas{max-height:none !important; width:100% !important;}
 
-/* ---------- Tables ---------- */
-.mtg-table-wrap{
-  background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
-  box-shadow:var(--shadow); overflow:hidden;
-}
-.mtg-table-scroll{overflow-x:auto;}
-table.mtg-table{width:100%; border-collapse:collapse; font-size:13px;}
-table.mtg-table thead th{
-  background:var(--navy); color:#fff; text-align:left; padding:10px 14px; font-weight:600; font-size:11.5px;
-  text-transform:uppercase; letter-spacing:.03em; white-space:nowrap; position:sticky; top:0;
-}
-table.mtg-table tbody td{padding:9px 14px; border-bottom:1px solid var(--border); white-space:nowrap; color:var(--ink);}
-table.mtg-table tbody tr:hover{background:var(--surface-alt);}
-table.mtg-table tbody tr:last-child td{border-bottom:none;}
-.num{font-family:'IBM Plex Mono'; text-align:right; font-variant-numeric:tabular-nums;}
-.neg-row td.num.saldo-cell{color:var(--rust); font-weight:600;}
-.tag{
-  display:inline-block; padding:3px 9px; border-radius:99px; font-size:11px; font-weight:600;
-}
-.tag-masuk{background:var(--emerald-soft); color:var(--emerald);}
-.tag-keluar{background:var(--rust-soft); color:var(--rust);}
-.tag-awal{background:var(--gold-soft); color:var(--gold);}
-.klas-chip{
-  display:inline-block; padding:3px 9px; border-radius:6px; font-size:11px; font-weight:600;
-  background:var(--surface-alt); color:var(--navy-soft);
-}
-.rank-badge{
-  display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px;
-  border-radius:50%; background:var(--gold-soft); color:var(--gold); font-weight:700; font-size:11.5px;
-}
+  /* ---------- Tables ---------- */
+  .mtg-table-wrap{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+    box-shadow:var(--shadow); overflow:hidden;
+  }
+  .mtg-table-scroll{overflow-x:auto;}
+  table.mtg-table{width:100%; border-collapse:collapse; font-size:13px;}
+  table.mtg-table thead th{
+    background:var(--navy); color:#fff; text-align:left; padding:10px 14px; font-weight:600; font-size:11.5px;
+    text-transform:uppercase; letter-spacing:.03em; white-space:nowrap; position:sticky; top:0;
+  }
+  table.mtg-table tbody td{padding:9px 14px; border-bottom:1px solid var(--border); white-space:nowrap; color:var(--ink);}
+  table.mtg-table tbody tr:hover{background:var(--surface-alt);}
+  table.mtg-table tbody tr:last-child td{border-bottom:none;}
+  .num{font-family:'IBM Plex Mono'; text-align:right; font-variant-numeric:tabular-nums;}
+  .neg-row td.num.saldo-cell{color:var(--rust); font-weight:600;}
+  .tag{
+    display:inline-block; padding:3px 9px; border-radius:99px; font-size:11px; font-weight:600;
+  }
+  .tag-masuk{background:var(--emerald-soft); color:var(--emerald);}
+  .tag-keluar{background:var(--rust-soft); color:var(--rust);}
+  .tag-awal{background:var(--gold-soft); color:var(--gold);}
+  .klas-chip{
+    display:inline-block; padding:3px 9px; border-radius:6px; font-size:11px; font-weight:600;
+    background:var(--surface-alt); color:var(--navy-soft);
+  }
+  .rank-badge{
+    display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px;
+    border-radius:50%; background:var(--gold-soft); color:var(--gold); font-weight:700; font-size:11.5px;
+  }
 
-/* ---------- Buttons ---------- */
-.mtg-btn{
-  border:none; border-radius:8px; padding:9px 16px; font-size:13px; font-weight:600; cursor:pointer;
-  font-family:'Inter'; display:inline-flex; align-items:center; gap:6px; transition:all .15s ease;
-}
-.mtg-btn-primary{background:var(--navy); color:#fff;}
-.mtg-btn-primary:hover{background:var(--navy-soft);}
-.mtg-btn-gold{background:var(--gold); color:#fff;}
-.mtg-btn-gold:hover{opacity:.9;}
-.mtg-btn-ghost{background:transparent; color:var(--ink-soft); border:1px solid var(--border);}
-.mtg-btn-ghost:hover{background:var(--surface-alt);}
-.mtg-btn-danger{background:transparent; color:var(--rust);}
-.mtg-btn-danger:hover{background:var(--rust-soft);}
-.mtg-btn-sm{padding:5px 10px; font-size:12px;}
-.mtg-btn:disabled{opacity:.45; cursor:not-allowed;}
+  /* ---------- Buttons ---------- */
+  .mtg-btn{
+    border:none; border-radius:8px; padding:9px 16px; font-size:13px; font-weight:600; cursor:pointer;
+    font-family:'Inter'; display:inline-flex; align-items:center; gap:6px; transition:all .15s ease;
+  }
+  .mtg-btn-primary{background:var(--navy); color:#fff;}
+  .mtg-btn-primary:hover{background:var(--navy-soft);}
+  .mtg-btn-gold{background:var(--gold); color:#fff;}
+  .mtg-btn-gold:hover{opacity:.9;}
+  .mtg-btn-ghost{background:transparent; color:var(--ink-soft); border:1px solid var(--border);}
+  .mtg-btn-ghost:hover{background:var(--surface-alt);}
+  .mtg-btn-danger{background:transparent; color:var(--rust);}
+  .mtg-btn-danger:hover{background:var(--rust-soft);}
+  .mtg-btn-sm{padding:5px 10px; font-size:12px;}
+  .mtg-btn:disabled{opacity:.45; cursor:not-allowed;}
 
-/* ---------- Forms ---------- */
-.mtg-form-card{
-  background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
-  padding:18px; box-shadow:var(--shadow);
-}
-.mtg-form-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:12px;}
-.mtg-field{display:flex; flex-direction:column; gap:5px;}
-.mtg-field label{font-size:11.5px; font-weight:600; color:var(--ink-soft);}
-.mtg-input,.mtg-form-grid select{
-  border:1px solid var(--border); border-radius:8px; padding:8px 10px; font-size:13px;
-  font-family:'Inter'; background:#fff; color:var(--ink);
-}
-.mtg-input:focus,.mtg-form-grid select:focus{outline:2px solid var(--gold); outline-offset:1px;}
-.mtg-form-actions{display:flex; justify-content:flex-end; gap:8px; margin-top:14px;}
+  /* ---------- Forms ---------- */
+  .mtg-form-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+    padding:18px; box-shadow:var(--shadow);
+  }
+  .mtg-form-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:12px;}
+  .mtg-field{display:flex; flex-direction:column; gap:5px;}
+  .mtg-field label{font-size:11.5px; font-weight:600; color:var(--ink-soft);}
+  .mtg-input,.mtg-form-grid select{
+    border:1px solid var(--border); border-radius:8px; padding:8px 10px; font-size:13px;
+    font-family:'Inter'; background:#fff; color:var(--ink);
+  }
+  .mtg-input:focus,.mtg-form-grid select:focus{outline:2px solid var(--gold); outline-offset:1px;}
+  .mtg-form-actions{display:flex; justify-content:flex-end; gap:8px; margin-top:14px;}
 
-/* ---------- Canvassing ---------- */
-.mtg-trip-grid{display:grid; grid-template-columns:260px 1fr; gap:16px; margin-top:14px; align-items:start;}
-.mtg-trip-list{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden;}
-.mtg-trip-item{
-  padding:13px 16px; border-bottom:1px solid var(--border); cursor:pointer; transition:background .15s ease;
-}
-.mtg-trip-item:last-child{border-bottom:none;}
-.mtg-trip-item:hover{background:var(--surface-alt);}
-.mtg-trip-item.active{background:var(--gold-soft); border-left:3px solid var(--gold);}
-.mtg-trip-item .nm{font-weight:600; font-size:13.5px; color:var(--navy);}
-.mtg-trip-item .pd{font-size:11.5px; color:var(--ink-faint); margin-top:2px;}
-.mtg-trip-item .sisa{font-size:11.5px; margin-top:3px; font-family:'IBM Plex Mono'; font-weight:600;}
-.mtg-trip-add{padding:12px 16px; text-align:center;}
+  /* ---------- Canvassing ---------- */
+  .mtg-trip-grid{display:grid; grid-template-columns:260px 1fr; gap:16px; margin-top:14px; align-items:start;}
+  .mtg-trip-list{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden;}
+  .mtg-trip-item{
+    padding:13px 16px; border-bottom:1px solid var(--border); cursor:pointer; transition:background .15s ease;
+  }
+  .mtg-trip-item:last-child{border-bottom:none;}
+  .mtg-trip-item:hover{background:var(--surface-alt);}
+  .mtg-trip-item.active{background:var(--gold-soft); border-left:3px solid var(--gold);}
+  .mtg-trip-item .nm{font-weight:600; font-size:13.5px; color:var(--navy);}
+  .mtg-trip-item .pd{font-size:11.5px; color:var(--ink-faint); margin-top:2px;}
+  .mtg-trip-item .sisa{font-size:11.5px; margin-top:3px; font-family:'IBM Plex Mono'; font-weight:600;}
+  .mtg-trip-add{padding:12px 16px; text-align:center;}
 
-.mtg-empty{
-  text-align:center; padding:40px 20px; color:var(--ink-faint); font-size:13.5px;
-}
-.mtg-toolbar{display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:10px;}
-.mtg-summary-strip{display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-bottom:14px;}
-.mtg-summary-box{background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:12px 14px;}
-.mtg-summary-box .lbl{font-size:11px; font-weight:600; color:var(--ink-soft); text-transform:uppercase;}
-.mtg-summary-box .val{font-family:'IBM Plex Mono'; font-size:17px; font-weight:600; margin-top:4px;}
-.mtg-summary-box.highlight{border-color:var(--navy); background:var(--surface-alt);}
+  .mtg-empty{
+    text-align:center; padding:40px 20px; color:var(--ink-faint); font-size:13.5px;
+  }
+  .mtg-toolbar{display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:10px;}
+  .mtg-summary-strip{display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-bottom:14px;}
+  .mtg-summary-box{background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:12px 14px;}
+  .mtg-summary-box .lbl{font-size:11px; font-weight:600; color:var(--ink-soft); text-transform:uppercase;}
+  .mtg-summary-box .val{font-family:'IBM Plex Mono'; font-size:17px; font-weight:600; margin-top:4px;}
+  .mtg-summary-box.highlight{border-color:var(--navy); background:var(--surface-alt);}
 
-.mtg-modal-overlay{
-  position:fixed; inset:0; background:rgba(18,41,61,0.45); display:flex; align-items:center; justify-content:center;
-  z-index:1000; padding:20px;
-}
-.mtg-modal{
-  background:#fff; border-radius:14px; padding:22px; width:100%; max-width:480px; box-shadow:0 20px 60px rgba(0,0,0,0.25);
-}
-.mtg-modal h3{font-size:16px; margin-bottom:4px;}
-.mtg-modal p{font-size:13px; color:var(--ink-soft); margin:0 0 16px 0;}
+  .mtg-modal-overlay{
+    position:fixed; inset:0; background:rgba(18,41,61,0.45); display:flex; align-items:center; justify-content:center;
+    z-index:1000; padding:20px;
+  }
+  .mtg-modal{
+    background:#fff; border-radius:14px; padding:22px; width:100%; max-width:480px; box-shadow:0 20px 60px rgba(0,0,0,0.25);
+  }
+  .mtg-modal h3{font-size:16px; margin-bottom:4px;}
+  .mtg-modal p{font-size:13px; color:var(--ink-soft); margin:0 0 16px 0;}
 
-.mtg-icon-btn{
-  background:transparent; border:none; cursor:pointer; padding:5px; border-radius:6px; color:var(--ink-faint);
-  display:inline-flex; align-items:center; justify-content:center;
-}
-.mtg-icon-btn:hover{background:var(--surface-alt); color:var(--ink);}
+  .mtg-icon-btn{
+    background:transparent; border:none; cursor:pointer; padding:5px; border-radius:6px; color:var(--ink-faint);
+    display:inline-flex; align-items:center; justify-content:center;
+  }
+  .mtg-icon-btn:hover{background:var(--surface-alt); color:var(--ink);}
 
-@media (max-width:1100px){
-  .mtg-summary-strip{grid-template-columns:repeat(3,1fr);}
-}
-@media (max-width:900px){
-  .mtg-kpi-grid{grid-template-columns:repeat(2,1fr);}
-  .mtg-chart-grid{grid-template-columns:1fr;}
-  .mtg-form-grid{grid-template-columns:repeat(2,1fr);}
-  .mtg-trip-grid{grid-template-columns:1fr;}
-  .mtg-summary-strip{grid-template-columns:repeat(2,1fr) !important;}
-}
-</style>
+  /* ---------- RESPONSIF HP & TABLET ---------- */
+  @media (max-width: 768px){
+    .mtg-header { padding: 16px 16px 0 16px; }
+    .mtg-header-top { flex-direction: column; gap: 12px; }
+    .mtg-balance-pill { width: 100%; text-align: left; display: flex; justify-content: space-between; align-items: center; }
+    .mtg-balance-pill .val { margin-top: 0; font-size: 17px; }
+    .mtg-body { padding: 16px 14px 28px 14px; }
+    
+    .mtg-kpi-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+    .mtg-kpi-card { padding: 12px 14px !important; }
+    .mtg-kpi-value { font-size: 15px !important; }
+    
+    .mtg-chart-grid { grid-template-columns: 1fr !important; }
+    .mtg-filterbar { flex-direction: column; align-items: stretch; gap: 10px; }
+    .mtg-filter-note { margin-left: 0; font-size: 11px; }
+    
+    .mtg-form-grid { grid-template-columns: 1fr !important; }
+    .mtg-field[style*="grid-column"] { grid-column: span 1 !important; }
+    
+    .mtg-trip-grid { grid-template-columns: 1fr !important; }
+    .mtg-summary-strip { grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; }
+  }
+  </style>
+</head>
+<body>
 
 <div class="mtg-app" id="mtgApp">
   <div class="mtg-header">
     <div class="mtg-header-top">
       <div class="mtg-brand">
-        <!-- LOGO DENGAN GAMBAR (JIKA logo.png DITAMBAHKAN) / FALLBACK TERUBAH EMAS TEKS -->
         <img src="logo.png" alt="Logo" class="mtg-brand-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
         <div class="mtg-brand-mark" style="display:none;">MTG</div>
         <div>
           <div class="mtg-brand-title">Arus Kas MTG</div>
-          <div class="mtg-brand-sub">Dashboard · Buku Kas · Canvassing Tracker</div>
+          <div class="mtg-brand-sub">
+            <span>Dashboard · Buku Kas · Canvassing</span>
+            <span class="mtg-sync-status" id="cloudStatus">🟢 Cloud Sync</span>
+            <button class="mtg-sync-btn" id="btnManualRefresh" title="Refresh Data Sekarang">🔄</button>
+          </div>
         </div>
       </div>
       <div class="mtg-balance-pill">
@@ -264,7 +298,6 @@ table.mtg-table tbody tr:last-child td{border-bottom:none;}
   <div class="mtg-body" id="mtgBody"></div>
 </div>
 
-<!-- UNPKG CDN UNTUK KESTABILAN PEMUATAN -->
 <script src="https://unpkg.com/chart.js@4.4.3/dist/chart.umd.js"></script>
 <script src="https://unpkg.com/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <script src="https://unpkg.com/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
@@ -273,7 +306,7 @@ table.mtg-table tbody tr:last-child td{border-bottom:none;}
 (function(){
 "use strict";
 
-const SEED_DATA = {"ledger": [{"tanggal": "2026-05-01", "kategori": "Kas Awal", "klasifikasi": "Modal Awal", "keterangan": "Setoran modal awal pemilik", "akun": "BCA", "masuk": 50000000.0, "keluar": 0}, {"tanggal": "2026-05-07", "kategori": "Pengeluaran", "klasifikasi": "Perlengkapan & Aset Kantor", "keterangan": "Tempat Sampah", "akun": "BCA", "masuk": 0, "keluar": 147000.0}, {"tanggal": "2026-05-07", "kategori": "Pengeluaran", "klasifikasi": "Perlengkapan & Aset Kantor", "keterangan": "Stop Kontak", "akun": "BCA", "masuk": 0, "keluar": 92000.0}, {"tanggal": "2026-05-07", "kategori": "Pengeluaran", "klasifikasi": "Perlengkapan & Aset Kantor", "keterangan": "Pewangi Ruangan", "akun": "BCA", "masuk": 0, "keluar": 81500.0}, {"tanggal": "2026-05-07", "kategori": "Pengeluaran", "klasifikasi": "Perlengkapan & Aset Kantor", "keterangan": "Plastik Sampah", "akun": "BCA", "masuk": 0, "keluar": 10500.0}, {"tanggal": "2026-05-07", "kategori": "Pengeluaran", "klasifikasi": "Perlengkapan & Aset Kantor", "keterangan": "Laptop", "akun": "BCA", "masuk": 0, "keluar": 10800000.0}, {"tanggal": "2026-05-07", "kategori": "Pengeluaran", "klasifikasi": "Perlengkapan & Aset Kantor", "keterangan": "CPU", "akun": "BCA", "masuk": 0, "keluar": 2100000.0}, {"tanggal": "2026-05-07", "kategori": "Pengeluaran", "klasifikasi": "Perlengkapan & Aset Kantor", "keterangan": "Handphone", "akun": "BCA", "masuk": 0, "keluar": 5600000.0}, {"tanggal": "2026-05-09", "kategori": "Pengeluaran", "klasifikasi": "Perlengkapan & Aset Kantor", "keterangan": "USB Wifi", "akun": "BCA", "masuk": 0, "keluar": 99000.0}, {"tanggal": "2026-05-09", "kategori": "Pengeluaran", "klasifikasi": "Perlengkapan & Aset Kantor", "keterangan": "Monitor CPU", "akun": "BCA", "masuk": 0, "keluar": 775000.0}, {"tanggal": "2026-05-10", "kategori": "Pengeluaran", "klasifikasi": "Perlengkapan & Aset Kantor", "keterangan": "Ananda Galon 2", "akun": "BCA", "masuk": 0, "keluar": 82000.0}, {"tanggal": "2026-05-10", "kategori": "Pengeluaran", "klasifikasi": "Perlengkapan & Aset Kantor", "keterangan": "Dispenser", "akun": "BCA", "masuk": 0, "keluar": 335000.0}, {"tanggal": "2026-05-10", "kategori": "Pengeluaran", "klasifikasi": "Perlengkapan & Aset Kantor", "keterangan": "Papan tulis dan ATK", "akun": "BCA", "masuk": 0, "keluar": 949500.0}, {"tanggal": "2026-05-12", "kategori": "Pengeluaran", "klasifikasi": "Transportasi & Kendaraan", "keterangan": "Angkut Barang", "akun": "BCA", "masuk": 0, "keluar": 150000.0}, {"tanggal": "2026-05-12", "kategori": "Pengeluaran", "klasifikasi": "Marketing & Branding", "keterangan": "Baju Polo", "akun": "BCA", "masuk": 0, "keluar": 786500.0}, {"tanggal": "2026-05-12", "kategori": "Pengeluaran", "klasifikasi": "Marketing & Branding", "keterangan": "Kain Bahan", "akun": "BCA", "masuk": 0, "keluar": 660000.0}, {"tanggal": "2026-05-14", "kategori": "Pengeluaran", "klasifikasi": "Operasional Kantor", "keterangan": "Wifi Checking (Teguh Suroso)", "akun": "BCA", "masuk": 0, "keluar": 100000.0}, {"tanggal": "2026-05-14", "kategori": "Pengeluaran", "klasifikasi": "Perlengkapan & Aset Kantor", "keterangan": "Mouse & Keyboard", "akun": "BCA", "masuk": 0, "keluar": 244000.0}, {"tanggal": "2026-05-13", "kategori": "Pengeluaran", "klasifikasi": "Perlengkapan & Aset Kantor", "keterangan": "Botol Ananda 220ml", "akun": "BCA", "masuk": 0, "keluar": 46000.0}, {"tanggal": "2026-05-17", "kategori": "Pengeluaran", "klasifikasi": "Perlengkapan & Aset Kantor", "keterangan": "Meteran Baju", "akun": "BCA", "masuk": 0, "keluar": 28000.0}, {"tanggal": "2026-05-17", "kategori": "Pengeluaran", "klasifikasi": "Perlengkapan & Aset Kantor", "keterangan": "Map Kertas, dll", "akun": "BCA", "masuk": 0, "keluar": 53000.0}, {"tanggal": "2026-05-13", "kategori": "Pengeluaran", "klasifikasi": "Transportasi & Kendaraan", "keterangan": "Bensin Tegal", "akun": "BCA", "masuk": 0, "keluar": 200000.0}, {"tanggal": "2026-05-16", "kategori": "Pengeluaran", "klasifikasi": "Transportasi & Kendaraan", "keterangan": "Tol PP", "akun": "BCA", "masuk": 0, "keluar": 157000.0}, {"tanggal": "2026-05-18", "kategori": "Pengeluaran", "klasifikasi": "Transportasi & Kendaraan", "keterangan": "Tol Berangkat", "akun": "BCA", "masuk": 0, "keluar": 78500.0}, {"tanggal": "2026-05-18", "kategori": "Pengeluaran", "klasifikasi": "Konsumsi", "keterangan": "Makan Siang Tegal", "akun": "BCA", "masuk": 0, "keluar": 75000.0}, {"tanggal": "2026-05-24", "kategori": "Pengeluaran", "klasifikasi": "Transportasi & Kendaraan", "keterangan": "Perpanjangan STNK Mobil Kantor", "akun": "BCA", "masuk": 0, "keluar": 4600000.0}, {"tanggal": "2026-05-24", "kategori": "Pengeluaran", "klasifikasi": "Transportasi & Kendaraan", "keterangan": "Pembelian Wipper", "akun": "BCA", "masuk": 0, "keluar": 180000.0}, {"tanggal": "2026-05-24", "kategori": "Pengeluaran", "klasifikasi": "Marketing & Branding", "keterangan": "Jahit Baju  + Bordir & Kartu Nama", "akun": "BCA", "masuk": 0, "keluar": 404000.0}, {"tanggal": "2026-05-25", "kategori": "Pengeluaran", "klasifikasi": "Canvassing", "keterangan": "Bensin Canvassing Batang", "akun": "BCA", "masuk": 0, "keluar": 100000.0}, {"tanggal": "2026-05-25", "kategori": "Pengeluaran", "klasifikasi": "Operasional Kantor", "keterangan": "Listrik Kantor", "akun": "BCA", "masuk": 0, "keluar": 503000.0}, {"tanggal": "2026-05-26", "kategori": "Pengeluaran", "klasifikasi": "Transportasi & Kendaraan", "keterangan": "Keperluan Mobil (Holder, Charger di mobil, dll)", "akun": "BCA", "masuk": 0, "keluar": 213000.0}, {"tanggal": "2026-05-30", "kategori": "Pengeluaran", "klasifikasi": "Transportasi & Kendaraan", "keterangan": "Bensin", "akun": "BCA", "masuk": 0, "keluar": 437880.0}, {"tanggal": "2026-05-31", "kategori": "Pengeluaran", "klasifikasi": "Perlengkapan & Aset Kantor", "keterangan": "Document Keeper", "akun": "BCA", "masuk": 0, "keluar": 175000.0}, {"tanggal": "2026-06-02", "kategori": "Pengeluaran", "klasifikasi": "Transportasi & Kendaraan", "keterangan": "Tol PP Pekalongan - Tegal", "akun": "BCA", "masuk": 0, "keluar": 157000.0}, {"tanggal": "2026-06-02", "kategori": "Pengeluaran", "klasifikasi": "Konsumsi", "keterangan": "Makan Siang Tegal 3 orang", "akun": "BCA", "masuk": 0, "keluar": 90000.0}, {"tanggal": "2026-06-02", "kategori": "Pengeluaran", "klasifikasi": "Transportasi & Kendaraan", "keterangan": "Service Mobil", "akun": "BCA", "masuk": 0, "keluar": 2504564.0}, {"tanggal": "2026-06-04", "kategori": "Pengeluaran", "klasifikasi": "Operasional Kantor", "keterangan": "Gemini Pro Juni", "akun": "BCA", "masuk": 0, "keluar": 85470.0}, {"tanggal": "2026-06-07", "kategori": "Pengeluaran", "klasifikasi": "Operasional Kantor", "keterangan": "Listrik Kantor 7 Juni 2026", "akun": "BCA", "masuk": 0, "keluar": 503000.0}, {"tanggal": "2026-06-08", "kategori": "Pengeluaran", "klasifikasi": "Perlengkapan & Aset Kantor", "keterangan": "keperluan Kantor(Kartu,Pewangi,Lem)", "akun": "BCA", "masuk": 0, "keluar": 87000.0}, {"tanggal": "2026-06-15", "kategori": "Pengeluaran", "klasifikasi": "Operasional Kantor", "keterangan": "Listrik Kantor 15 Juni 2026", "akun": "BCA", "masuk": 0, "keluar": 1003000.0}, {"tanggal": "2026-06-17", "kategori": "Pengeluaran", "klasifikasi": "Transportasi & Kendaraan", "keterangan": "Bensin", "akun": "BCA", "masuk": 0, "keluar": 300000.0}, {"tanggal": "2026-06-17", "kategori": "Pengeluaran", "klasifikasi": "Transportasi & Kendaraan", "keterangan": "Tol Pkl - Kendal", "akun": "BCA", "masuk": 0, "keluar": 91000.0}, {"tanggal": "2026-06-17", "kategori": "Pengeluaran", "klasifikasi": "Transportasi & Kendaraan", "keterangan": "Tol Kendal - PKL", "akun": "BCA", "masuk": 0, "keluar": 81500.0}, {"tanggal": "2026-06-18", "kategori": "Pengeluaran", "klasifikasi": "Operasional Kantor", "keterangan": "Sedia Kas Kantor(300k)", "akun": "Cash", "masuk": 0, "keluar": 31564.0}, {"tanggal": "2026-06-19", "kategori": "Pengeluaran", "klasifikasi": "Marketing & Branding", "keterangan": "Jasa design mobil", "akun": "BCA", "masuk": 0, "keluar": 150000.0}, {"tanggal": "2026-06-21", "kategori": "Pengeluaran", "klasifikasi": "Marketing & Branding", "keterangan": "Branding Mobil", "akun": "BCA", "masuk": 0, "keluar": 2000000.0}, {"tanggal": "2026-06-23", "kategori": "Pengeluaran", "klasifikasi": "Operasional Kantor", "keterangan": "Keperluan Kantor(Sapu,Serok,Pel)", "akun": "Cash", "masuk": 0, "keluar": 73000.0}, {"tanggal": "2026-06-27", "kategori": "Pengeluaran", "klasifikasi": "Operasional Kantor", "keterangan": "Perlengkapan kantor (Kopi, Gelas Plastik)", "akun": "Cash", "masuk": 0, "keluar": 21000.0}, {"tanggal": "2026-06-30", "kategori": "Pengeluaran", "klasifikasi": "Operasional Kantor", "keterangan": "Air galon kantor", "akun": "Cash", "masuk": 0, "keluar": 16000.0}, {"tanggal": "2026-07-01", "kategori": "Pengeluaran", "klasifikasi": "Transportasi & Kendaraan", "keterangan": "Tol Pkl - Tegal", "akun": "BCA", "masuk": 0, "keluar": 78500.0}, {"tanggal": "2026-07-01", "kategori": "Pengeluaran", "klasifikasi": "Transportasi & Kendaraan", "keterangan": "Tol Tegal - Pkl", "akun": "BCA", "masuk": 0, "keluar": 78500.0}, {"tanggal": "2026-07-02", "kategori": "Pengeluaran", "klasifikasi": "Operasional Kantor", "keterangan": "Listrik Kantor 2 Juli 2026", "akun": "BCA", "masuk": 0, "keluar": 503000.0}, {"tanggal": "2026-07-03", "kategori": "Pengeluaran", "klasifikasi": "Operasional Kantor", "keterangan": "Perlengkapan kantor (Staples + Isi Staples)", "akun": "Cash", "masuk": 0, "keluar": 47500.0}, {"tanggal": "2026-07-03", "kategori": "Pengeluaran", "klasifikasi": "Operasional Kantor", "keterangan": "Perlengkapan Kantor ( Cairan Pel, Permen)", "akun": "Cash", "masuk": 0, "keluar": 25100.0}, {"tanggal": "2026-07-04", "kategori": "Pengeluaran", "klasifikasi": "Transportasi & Kendaraan", "keterangan": "Bensin", "akun": "BCA", "masuk": 0, "keluar": 100000.0}, {"tanggal": "2026-07-04", "kategori": "Pemasukan", "klasifikasi": "Pemasukan Modal", "keterangan": "Kas Masuk", "akun": "BCA", "masuk": 25000000.0, "keluar": 0}, {"tanggal": "2026-07-04", "kategori": "Pengeluaran", "klasifikasi": "Operasional Kantor", "keterangan": "Kuota Internet an Haidar", "akun": "BCA", "masuk": 0, "keluar": 1000000.0}, {"tanggal": "2026-07-04", "kategori": "Pengeluaran", "klasifikasi": "Perlengkapan & Aset Kantor", "keterangan": "Rak Sepatu Kantor ", "akun": "Cash", "masuk": 0, "keluar": 50336.0}, {"tanggal": "2026-07-06", "kategori": "Pengeluaran", "klasifikasi": "Operasional Kantor", "keterangan": "Kuota Internet an Zahid", "akun": "BCA", "masuk": 0, "keluar": 40000.0}, {"tanggal": "2026-07-06", "kategori": "Pengeluaran", "klasifikasi": "Perlengkapan & Aset Kantor", "keterangan": "Lampu Kantor", "akun": "Cash", "masuk": 0, "keluar": 35500.0}, {"tanggal": "2026-07-09", "kategori": "Pengeluaran", "klasifikasi": "Operasional Kantor", "keterangan": "Gemini Pro Juli", "akun": "BCA", "masuk": 0, "keluar": 85470.0}, {"tanggal": "2026-07-11", "kategori": "Pengeluaran", "klasifikasi": "Operasional Kantor", "keterangan": "Sedia Kas Kantor (200)", "akun": "Cash", "masuk": 0, "keluar": 95000.0}, {"tanggal": "2026-07-11", "kategori": "Pengeluaran", "klasifikasi": "Operasional Kantor", "keterangan": "Tinta Hitam Printer", "akun": "Cash", "masuk": 0, "keluar": 95000.0}, {"tanggal": "2026-07-11", "kategori": "Pengeluaran", "klasifikasi": "Operasional Kantor", "keterangan": "Kirim Sampel Bahan ke Bandung", "akun": "Cash", "masuk": 0, "keluar": 10000.0}, {"tanggal": "2026-07-11", "kategori": "Pengeluaran", "klasifikasi": "Operasional Kantor", "keterangan": "Listrik Kantor 13 Juli 2026", "akun": "BCA", "masuk": 0, "keluar": 503000.0}, {"tanggal": "2026-07-14", "kategori": "Pengeluaran", "klasifikasi": "Operasional Kantor", "keterangan": "Kuota Internet an Husain", "akun": "BCA", "masuk": 0, "keluar": 27500.0}, {"tanggal": "2026-07-18", "kategori": "Pengeluaran", "klasifikasi": "Marketing & Branding", "keterangan": "Papan Bunga Toko Arafah Hasibuan Medan ", "akun": "BCA", "masuk": 0, "keluar": 250000.0}, {"tanggal": "2026-07-20", "kategori": "Pengeluaran", "klasifikasi": "Transportasi & Kendaraan", "keterangan": "Cuci Mobil", "akun": "BCA", "masuk": 0, "keluar": 80000.0}], "trips": [{"nama": "Jakarta dsk", "periode": "20 May - 22 May 2026", "expenses": [{"tanggal": "2026-05-20", "kategori": "Keluar Rekening", "keterangan": "Top Up", "metode": "BCA", "keluarRek": 650000.0, "realisasi": 0}, {"tanggal": "2026-05-20", "kategori": "Perjalanan", "keterangan": "Realisasi Tol", "metode": "Flazz/Tunai", "keluarRek": 0, "realisasi": 692000.0}, {"tanggal": "2026-05-20", "kategori": "Perjalanan", "keterangan": "Realisasi Bensin", "metode": "BCA", "keluarRek": 0, "realisasi": 903431.0}, {"tanggal": "2026-05-20", "kategori": "Perjalanan", "keterangan": "Pagi", "metode": "Cash", "keluarRek": 0, "realisasi": 100000.0}, {"tanggal": "2026-05-20", "kategori": "Penginapan", "keterangan": "Hotel H-1", "metode": "BCA", "keluarRek": 0, "realisasi": 330000.0}, {"tanggal": "2026-05-21", "kategori": "Penginapan", "keterangan": "Hotel H-2", "metode": "BCA", "keluarRek": 0, "realisasi": 470000.0}, {"tanggal": "2026-05-20", "kategori": "Lain-lain", "keterangan": "Beli Sarung Cendana", "metode": "BCA", "keluarRek": 0, "realisasi": 363500.0}, {"tanggal": "2026-05-20", "kategori": "Keluar Rekening", "keterangan": "Tarik Tunai", "metode": "Flazz/Tunai", "keluarRek": 1000000.0, "realisasi": 0}, {"tanggal": "2026-05-20", "kategori": "Makan & Minum", "keterangan": "Minum", "metode": "Cash", "keluarRek": 0, "realisasi": 27000.0}, {"tanggal": "2026-05-20", "kategori": "Makan & Minum", "keterangan": "Makan H-1", "metode": "Cash", "keluarRek": 0, "realisasi": 138000.0}, {"tanggal": "2026-05-21", "kategori": "Makan & Minum", "keterangan": "Makan H-2", "metode": "Cash", "keluarRek": 0, "realisasi": 150000.0}, {"tanggal": "2026-05-22", "kategori": "Makan & Minum", "keterangan": "Makan H-3", "metode": "Cash", "keluarRek": 0, "realisasi": 100000.0}, {"tanggal": "2026-05-20", "kategori": "Perjalanan", "keterangan": "Parkir H-1", "metode": "Cash", "keluarRek": 0, "realisasi": 15000.0}, {"tanggal": "2026-05-21", "kategori": "Perjalanan", "keterangan": "Parkir H-2", "metode": "Cash", "keluarRek": 0, "realisasi": 33000.0}, {"tanggal": "2026-05-22", "kategori": "Perjalanan", "keterangan": "Parkir H-3", "metode": "Cash", "keluarRek": 0, "realisasi": 27000.0}]}, {"nama": "Zona 4", "periode": "08 Jun - 12 Jun 2026", "expenses": [{"tanggal": "2025-06-08", "kategori": "Makan & Minum", "keterangan": "Makan H-1", "metode": "Cash", "keluarRek": 0, "realisasi": 261000.0}, {"tanggal": "2026-06-08", "kategori": "Perjalanan", "keterangan": "Bensin", "metode": "BCA", "keluarRek": 0, "realisasi": 383000.0}, {"tanggal": "2026-06-08", "kategori": "Penginapan", "keterangan": "Hotel H-1", "metode": "BCA", "keluarRek": 0, "realisasi": 413000.0}, {"tanggal": "2026-06-08", "kategori": "Perjalanan", "keterangan": "Parkir H-1", "metode": "Cash", "keluarRek": 0, "realisasi": 27000.0}, {"tanggal": "2026-06-08", "kategori": "Keluar Rekening", "keterangan": "Tarik Tunai", "metode": "BCA", "keluarRek": 1000000.0, "realisasi": 0}, {"tanggal": "2026-06-08", "kategori": "Makan & Minum", "keterangan": "Snack H-1", "metode": "Cash", "keluarRek": 0, "realisasi": 30400.0}, {"tanggal": "2026-06-09", "kategori": "Makan & Minum", "keterangan": "Makan H-2", "metode": "Cash", "keluarRek": 0, "realisasi": 193000.0}, {"tanggal": "2026-06-09", "kategori": "Makan & Minum", "keterangan": "Snack & Minum H-2", "metode": "Cash", "keluarRek": 0, "realisasi": 46700.0}, {"tanggal": "2026-06-09", "kategori": "Makan & Minum", "keterangan": "Snack & Minum H-2", "metode": "Cash", "keluarRek": 0, "realisasi": 9900.0}, {"tanggal": "2026-06-09", "kategori": "Perjalanan", "keterangan": "Parkir H-2", "metode": "Cash", "keluarRek": 0, "realisasi": 19000.0}, {"tanggal": "2026-06-09", "kategori": "Penginapan", "keterangan": "Hotel H-2", "metode": "BCA", "keluarRek": 0, "realisasi": 400000.0}, {"tanggal": "2026-06-10", "kategori": "Makan & Minum", "keterangan": "Makan H-3", "metode": "Cash", "keluarRek": 0, "realisasi": 269000.0}, {"tanggal": "2026-06-10", "kategori": "Perjalanan", "keterangan": "Parkir H-3", "metode": "Cash", "keluarRek": 0, "realisasi": 26000.0}, {"tanggal": "2026-06-10", "kategori": "Penginapan", "keterangan": "Hotel H-3", "metode": "BCA", "keluarRek": 0, "realisasi": 435000.0}, {"tanggal": "2026-06-10", "kategori": "Perjalanan", "keterangan": "Bensin H-3", "metode": "BCA", "keluarRek": 0, "realisasi": 300000.0}, {"tanggal": "2026-06-11", "kategori": "Makan & Minum", "keterangan": "Snack & Minum H-4", "metode": "Cash", "keluarRek": 0, "realisasi": 23820.0}, {"tanggal": "2026-06-11", "kategori": "Keluar Rekening", "keterangan": "Transfer ke Flazz", "metode": "BCA", "keluarRek": 0, "realisasi": 200000.0}, {"tanggal": "2026-06-11", "kategori": "Perjalanan", "keterangan": "Tol Brebes - Cirebon", "metode": "Flazz/Tunai", "keluarRek": 48000.0, "realisasi": 0}, {"tanggal": "2026-06-11", "kategori": "Makan & Minum", "keterangan": "Makan H-4", "metode": "Cash", "keluarRek": 0, "realisasi": 270000.0}, {"tanggal": "2026-06-11", "kategori": "Perjalanan", "keterangan": "Parkir H-4", "metode": "Cash", "keluarRek": 0, "realisasi": 33000.0}, {"tanggal": "2026-06-11", "kategori": "Penginapan", "keterangan": "Hotel H-4", "metode": "BCA", "keluarRek": 0, "realisasi": 410000.0}, {"tanggal": "2026-06-12", "kategori": "Makan & Minum", "keterangan": "Makan H-5", "metode": "Cash", "keluarRek": 0, "realisasi": 259000.0}, {"tanggal": "2026-06-12", "kategori": "Perjalanan", "keterangan": "Parkir H-5", "metode": "Cash", "keluarRek": 0, "realisasi": 31000.0}, {"tanggal": "2026-06-12", "kategori": "Perjalanan", "keterangan": "Tol Cirebon - Pekalongan", "metode": "Flazz/Tunai", "keluarRek": 128500.0, "realisasi": 0}]}, {"nama": "Zona 2", "periode": "22 Jun - 27 Jun 2026", "expenses": [{"tanggal": "2025-06-22", "kategori": "Keluar Rekening", "keterangan": "Tarik Tunai", "metode": "BCA", "keluarRek": 1000000.0, "realisasi": 0}, {"tanggal": "2026-06-22", "kategori": "Perjalanan", "keterangan": "Bensin", "metode": "BCA", "keluarRek": 0, "realisasi": 300000.0}, {"tanggal": "2026-06-22", "kategori": "Penginapan", "keterangan": "Hotel H -1", "metode": "BCA", "keluarRek": 0, "realisasi": 370000.0}, {"tanggal": "2026-06-22", "kategori": "Makan & Minum", "keterangan": "Makan H-1", "metode": "Cash", "keluarRek": 0, "realisasi": 200000.0}, {"tanggal": "2026-06-22", "kategori": "Makan & Minum", "keterangan": "Air H-1", "metode": "Cash", "keluarRek": 0, "realisasi": 28500.0}, {"tanggal": "2026-06-22", "kategori": "Perjalanan", "keterangan": "Parkir H-1", "metode": "Cash", "keluarRek": 0, "realisasi": 12000.0}, {"tanggal": "2026-06-23", "kategori": "Keluar Rekening", "keterangan": "Transfer ke Flazz", "metode": "BCA", "keluarRek": 0, "realisasi": 50000.0}, {"tanggal": "2026-06-23", "kategori": "Makan & Minum", "keterangan": "Makan H-2", "metode": "Cash", "keluarRek": 0, "realisasi": 270000.0}, {"tanggal": "2026-06-23", "kategori": "Makan & Minum", "keterangan": "Air minum H-2", "metode": "Cash", "keluarRek": 0, "realisasi": 34500.0}, {"tanggal": "2026-06-23", "kategori": "Perjalanan", "keterangan": "Parkir H-2", "metode": "Cash", "keluarRek": 0, "realisasi": 25000.0}, {"tanggal": "2026-06-23", "kategori": "Penginapan", "keterangan": "Hotel H-2", "metode": "BCA", "keluarRek": 0, "realisasi": 525000.0}, {"tanggal": "2026-06-24", "kategori": "Perjalanan", "keterangan": "Bensin", "metode": "BCA", "keluarRek": 0, "realisasi": 276000.0}, {"tanggal": "2026-06-24", "kategori": "Makan & Minum", "keterangan": "Makan H-3", "metode": "Cash", "keluarRek": 0, "realisasi": 197000.0}, {"tanggal": "2026-06-24", "kategori": "Penginapan", "keterangan": "Hotel H-3", "metode": "BCA", "keluarRek": 0, "realisasi": 635000.0}, {"tanggal": "2026-06-24", "kategori": "Perjalanan", "keterangan": "Parkir H-3", "metode": "Cash", "keluarRek": 0, "realisasi": 21000.0}, {"tanggal": "2026-06-25", "kategori": "Penginapan", "keterangan": "Hotel H-4", "metode": "BCA", "keluarRek": 0, "realisasi": 435600.0}, {"tanggal": "2026-06-25", "kategori": "Makan & Minum", "keterangan": "Makan H-4", "metode": "Cash", "keluarRek": 0, "realisasi": 166000.0}, {"tanggal": "2026-06-25", "kategori": "Perjalanan", "keterangan": "Parkir H-4", "metode": "Cash", "keluarRek": 0, "realisasi": 6000.0}, {"tanggal": "2026-06-26", "kategori": "Perjalanan", "keterangan": "Bensin", "metode": "Cash", "keluarRek": 0, "realisasi": 368100.0}, {"tanggal": "2026-06-26", "kategori": "Penginapan", "keterangan": "Hotel H-5", "metode": "BCA", "keluarRek": 0, "realisasi": 463500.0}, {"tanggal": "2026-06-26", "kategori": "Makan & Minum", "keterangan": "Makan H-5", "metode": "Cash", "keluarRek": 0, "realisasi": 125000.0}, {"tanggal": "2026-06-27", "kategori": "Keluar Rekening", "keterangan": "Transfer ke Flazz", "metode": "BCA", "keluarRek": 0, "realisasi": 150000.0}, {"tanggal": "2026-06-27", "kategori": "Makan & Minum", "keterangan": "Makan  H-6", "metode": "Cash", "keluarRek": 0, "realisasi": 216500.0}, {"tanggal": "2026-06-27", "kategori": "Makan & Minum", "keterangan": "Snack H-6", "metode": "Cash", "keluarRek": 0, "realisasi": 19000.0}, {"tanggal": "2026-06-27", "kategori": "Makan & Minum", "keterangan": "Air minum H-6", "metode": "Cash", "keluarRek": 0, "realisasi": 28500.0}, {"tanggal": "2026-06-27", "kategori": "Perjalanan", "keterangan": "Parkir H-6", "metode": "Cash", "keluarRek": 0, "realisasi": 18000.0}, {"tanggal": "2026-06-27", "kategori": "Perjalanan", "keterangan": "Cuci mobil", "metode": "BCA", "keluarRek": 0, "realisasi": 80000.0}]}, {"nama": "Zona 3", "periode": "05 Jul - 09 Jul 2026", "expenses": [{"tanggal": "2026-07-05", "kategori": "Keluar Rekening", "keterangan": "Tarik Tunai", "metode": "BCA", "keluarRek": 1500000.0, "realisasi": 0}, {"tanggal": "2026-07-05", "kategori": "Perjalanan", "keterangan": "Bensin", "metode": "BCA", "keluarRek": 0, "realisasi": 358000.0}, {"tanggal": "2026-07-06", "kategori": "Keluar Rekening", "keterangan": "Transfer ke Flazz", "metode": "BCA", "keluarRek": 0, "realisasi": 50000.0}, {"tanggal": "2026-07-06", "kategori": "Makan & Minum", "keterangan": "Makan H-1", "metode": "Cash", "keluarRek": 0, "realisasi": 152000.0}, {"tanggal": "2026-07-06", "kategori": "Makan & Minum", "keterangan": "Minum H-1", "metode": "Cash", "keluarRek": 0, "realisasi": 20000.0}, {"tanggal": "2026-07-06", "kategori": "Perjalanan", "keterangan": "Parkir H-1", "metode": "Cash", "keluarRek": 0, "realisasi": 11000.0}, {"tanggal": "2026-07-06", "kategori": "Penginapan", "keterangan": "Hotel H-1", "metode": "BCA", "keluarRek": 0, "realisasi": 481084.0}, {"tanggal": "2026-07-07", "kategori": "Makan & Minum", "keterangan": "Makan H-2", "metode": "Cash", "keluarRek": 0, "realisasi": 255000.0}, {"tanggal": "2026-07-07", "kategori": "Perjalanan", "keterangan": "Parkir H-2", "metode": "Cash", "keluarRek": 0, "realisasi": 28000.0}, {"tanggal": "2026-07-07", "kategori": "Penginapan", "keterangan": "Hotel H-2", "metode": "BCA", "keluarRek": 0, "realisasi": 400000.0}, {"tanggal": "2026-07-07", "kategori": "Perjalanan", "keterangan": "Bensin", "metode": "BCA", "keluarRek": 0, "realisasi": 326100.0}, {"tanggal": "2026-07-08", "kategori": "Makan & Minum", "keterangan": "Makan H-3", "metode": "Cash", "keluarRek": 0, "realisasi": 139000.0}, {"tanggal": "2026-07-08", "kategori": "Perjalanan", "keterangan": "Parkir H-3", "metode": "Cash", "keluarRek": 0, "realisasi": 33000.0}, {"tanggal": "2026-07-08", "kategori": "Penginapan", "keterangan": "Hotel H-3", "metode": "BCA", "keluarRek": 0, "realisasi": 350000.0}, {"tanggal": "2026-07-09", "kategori": "Perjalanan", "keterangan": "Transfer ke Flazz", "metode": "BCA", "keluarRek": 0, "realisasi": 50000.0}, {"tanggal": "2026-07-09", "kategori": "Makan & Minum", "keterangan": "Makan H-4", "metode": "Cash", "keluarRek": 0, "realisasi": 146000.0}, {"tanggal": "2026-07-09", "kategori": "Perjalanan", "keterangan": "Parkir H-4", "metode": "Cash", "keluarRek": 0, "realisasi": 17000.0}]}, {"nama": "Zona 1", "periode": "11 Jul - 16 Jul 2026", "expenses": [{"tanggal": "2026-07-11", "kategori": "Perjalanan", "keterangan": "Bensin", "metode": "BCA", "keluarRek": 0, "realisasi": 400100.0}, {"tanggal": "2026-07-13", "kategori": "Keluar Rekening", "keterangan": "Tarik Tunai", "metode": "BCA", "keluarRek": 1160000.0, "realisasi": 0}, {"tanggal": "2026-07-13", "kategori": "Makan & Minum", "keterangan": "Makan H-1", "metode": "Cash", "keluarRek": 0, "realisasi": 181000.0}, {"tanggal": "2026-07-13", "kategori": "Perjalanan", "keterangan": "Parkir H-1", "metode": "Cash", "keluarRek": 0, "realisasi": 24000.0}, {"tanggal": "2026-07-13", "kategori": "Makan & Minum", "keterangan": "Air Mineral", "metode": "Cash", "keluarRek": 0, "realisasi": 22000.0}, {"tanggal": "2026-07-13", "kategori": "Penginapan", "keterangan": "Hotel H-1", "metode": "BCA", "keluarRek": 0, "realisasi": 450000.0}, {"tanggal": "2026-07-14", "kategori": "Makan & Minum", "keterangan": "Makan H-2", "metode": "Cash", "keluarRek": 0, "realisasi": 189000.0}, {"tanggal": "2026-07-14", "kategori": "Perjalanan", "keterangan": "Parkir H-2", "metode": "Cash", "keluarRek": 0, "realisasi": 21000.0}, {"tanggal": "2026-07-14", "kategori": "Penginapan", "keterangan": "Hotel H-2", "metode": "BCA", "keluarRek": 0, "realisasi": 300000.0}, {"tanggal": "2026-07-15", "kategori": "Perjalanan", "keterangan": "Bensin", "metode": "BCA", "keluarRek": 0, "realisasi": 358000.0}, {"tanggal": "2026-07-15", "kategori": "Makan & Minum", "keterangan": "Makan H-3", "metode": "Cash", "keluarRek": 0, "realisasi": 256000.0}, {"tanggal": "2026-07-15", "kategori": "Perjalanan", "keterangan": "Parkir H-3", "metode": "Cash", "keluarRek": 0, "realisasi": 23000.0}, {"tanggal": "2026-07-15", "kategori": "Penginapan", "keterangan": "Hotel H-3", "metode": "BCA", "keluarRek": 0, "realisasi": 240000.0}, {"tanggal": "2026-07-16", "kategori": "Perjalanan", "keterangan": "Transfer ke Flazz", "metode": "BCA", "keluarRek": 0, "realisasi": 250000.0}, {"tanggal": "2026-07-16", "kategori": "Makan & Minum", "keterangan": "Makan H-4", "metode": "Cash", "keluarRek": 0, "realisasi": 190000.0}, {"tanggal": "2026-07-16", "kategori": "Perjalanan", "keterangan": "Parkir H-4", "metode": "Cash", "keluarRek": 0, "realisasi": 16000.0}, {"tanggal": "2026-07-16", "kategori": "Perjalanan", "keterangan": "Transfer ke Flazz", "metode": "BCA", "keluarRek": 0, "realisasi": 140000.0}]}, {"nama": "Zona 5", "periode": "20 Jul - 22 Jul 2026", "expenses": [{"tanggal": "2026-07-20", "kategori": "Perjalanan", "keterangan": "Tarik Tunai", "metode": "BCA", "keluarRek": 1000000.0, "realisasi": 0}, {"tanggal": "2026-07-20", "kategori": "Perjalanan", "keterangan": "Transfer Flazz", "metode": "BCA", "keluarRek": 0, "realisasi": 250000.0}, {"tanggal": "2026-07-20", "kategori": "Perjalanan", "keterangan": "Transfer Flazz", "metode": "BCA", "keluarRek": 0, "realisasi": 50000.0}, {"tanggal": "2026-07-20", "kategori": "Makan & Minum", "keterangan": "Makan H-1", "metode": "Cash", "keluarRek": 0, "realisasi": 170000.0}, {"tanggal": "2026-07-20", "kategori": "Makan & Minum", "keterangan": "Minum H-1", "metode": "Cash", "keluarRek": 0, "realisasi": 22000.0}, {"tanggal": "2026-07-20", "kategori": "Perjalanan", "keterangan": "Parkir H-1", "metode": "Cash", "keluarRek": 0, "realisasi": 8000.0}, {"tanggal": "2026-07-20", "kategori": "Penginapan", "keterangan": "Hotel H-1", "metode": "BCA", "keluarRek": 0, "realisasi": 230000.0}, {"tanggal": "2026-07-21", "kategori": "Makan & Minum", "keterangan": "Makan H-2", "metode": "Cash", "keluarRek": 0, "realisasi": 245000.0}, {"tanggal": "2026-07-21", "kategori": "Perjalanan", "keterangan": "Parkir H-2", "metode": "Cash", "keluarRek": 0, "realisasi": 19000.0}, {"tanggal": "2026-07-21", "kategori": "Penginapan", "keterangan": "Hotel H-2", "metode": "BCA", "keluarRek": 0, "realisasi": 380000.0}, {"tanggal": "2026-07-22", "kategori": "Perjalanan", "keterangan": "Bensin H-3", "metode": "BCA", "keluarRek": 0, "realisasi": 365030.0}]}]};
+const SEED_DATA = {"ledger": [{"tanggal": "2026-05-01", "kategori": "Kas Awal", "klasifikasi": "Modal Awal", "keterangan": "Setoran modal awal pemilik", "akun": "BCA", "masuk": 50000000.0, "keluar": 0}], "trips": []};
 
 const MONTHS = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
 const KATEGORI_LIST = ["Kas Awal","Pemasukan","Pengeluaran"];
@@ -297,6 +330,7 @@ let state = {
   editingTxnId: null,
   editingTripExpenseId: null,
   confirmDelete: null,
+  isSyncing: false
 };
 
 let chartRegistry = {};
@@ -312,7 +346,6 @@ function fmtRp(n){
 function fmtDate(iso){
   if(!iso) return '';
   const d = new Date(iso + 'T00:00:00');
-  const days = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
   const mon = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
   return String(d.getDate()).padStart(2,'0') + ' ' + mon[d.getMonth()] + ' ' + d.getFullYear();
 }
@@ -322,50 +355,80 @@ function escapeHtml(s){
   return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
+function setCloudStatus(status, text){
+  const el = document.getElementById('cloudStatus');
+  if(!el) return;
+  if(status === 'saving') { el.innerHTML = '⏳ Menyimpan...'; el.style.color = '#F4EAC9'; }
+  else if(status === 'loading') { el.innerHTML = '🔄 Memuat...'; el.style.color = '#A2C9B6'; }
+  else if(status === 'error') { el.innerHTML = '⚠️ Offline / Gagal'; el.style.color = '#F2B8A8'; }
+  else { el.innerHTML = '🟢 Terkoneksi Cloud'; el.style.color = '#E1F0E9'; }
+}
+
 /* ---------------- Storage (Terkoneksi ke Google Sheets API) ---------------- */
 const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbzHWh0LSoSV9XHWGhQH3twHM2oKXuaeBBAbBN3EnOTFSb1aMddb0KpAPEk6Q0BfTTKCVQ/exec";
 
-async function loadData(){
+async function loadData(silent = false){
+  if(state.isSyncing) return;
+  if(!silent) setCloudStatus('loading');
   try {
-    const res = await fetch(SHEET_API_URL);
+    // Menambahkan ?t=Timestamp agar browser TIDAK mengambil CACHE LAMA
+    const res = await fetch(SHEET_API_URL + "?t=" + Date.now());
     if (!res.ok) throw new Error("Status: " + res.status);
     const data = await res.json();
+    
     state.ledger = (data.ledger && data.ledger.length > 0) ? data.ledger : SEED_DATA.ledger.map(d => ({ id: uid(), ...d }));
     state.trips = (data.trips && data.trips.length > 0) ? data.trips : SEED_DATA.trips.map(tr => ({
       id: uid(), nama: tr.nama, periode: tr.periode,
       expenses: tr.expenses.map(e => ({ id: uid(), ...e }))
     }));
+
+    // Auto-sync internal jika ada trip baru
+    syncCanvassingToLedger();
+    render();
+    setCloudStatus('ok');
   } catch(e) {
-    console.warn("Koneksi ke Google Sheets terhalang (Akses Lokal/Offline). Memuat data cadangan...", e);
-    state.ledger = SEED_DATA.ledger.map(d => ({ id: uid(), ...d }));
-    state.trips = SEED_DATA.trips.map(tr => ({
-      id: uid(), nama: tr.nama, periode: tr.periode,
-      expenses: tr.expenses.map(e => ({ id: uid(), ...e }))
-    }));
+    console.warn("Koneksi ke Google Sheets terhalang. Memuat data cadangan...", e);
+    setCloudStatus('error');
   }
 }
 
 async function saveLedger(){
+  state.isSyncing = true;
+  setCloudStatus('saving');
   try {
     await fetch(SHEET_API_URL, {
       method: 'POST',
       body: JSON.stringify({ action: 'saveLedger', data: state.ledger }),
       headers: { 'Content-Type': 'text/plain;charset=utf-8' }
     });
-  } catch(e) { console.error("Gagal menyimpan Ledger ke Sheets:", e); }
+    setCloudStatus('ok');
+  } catch(e) { 
+    console.error("Gagal menyimpan Ledger ke Sheets:", e); 
+    setCloudStatus('error');
+  } finally {
+    state.isSyncing = false;
+  }
 }
 
 async function saveTrips(){
+  state.isSyncing = true;
+  setCloudStatus('saving');
   try {
     await fetch(SHEET_API_URL, {
       method: 'POST',
       body: JSON.stringify({ action: 'saveTrips', data: state.trips }),
       headers: { 'Content-Type': 'text/plain;charset=utf-8' }
     });
-  } catch(e) { console.error("Gagal menyimpan Trips ke Sheets:", e); }
+    setCloudStatus('ok');
+  } catch(e) { 
+    console.error("Gagal menyimpan Trips ke Sheets:", e); 
+    setCloudStatus('error');
+  } finally {
+    state.isSyncing = false;
+  }
 }
 
-/* ---------------- LOGIKA AUTO-SYNC CANVASSING KE BUKU ARUS KAS UTAMA ---------------- */
+/* ---------------- AUTO-SYNC CANVASSING KE LEDGER ---------------- */
 function syncCanvassingToLedger(){
   const activeTripIds = new Set(state.trips.map(t => t.id));
 
@@ -419,7 +482,7 @@ async function saveTripsAndSync(){
   await saveLedger();
 }
 
-/* ---------------- Derived data & KPI ---------------- */
+/* ---------------- Derived Data & KPI ---------------- */
 function sortedLedger(){
   return [...state.ledger].sort((a,b) => a.tanggal < b.tanggal ? -1 : (a.tanggal > b.tanggal ? 1 : 0));
 }
@@ -516,7 +579,7 @@ function topExpenses(n){
   return [...f].sort((a,b) => (b.keluar||0) - (a.keluar||0)).slice(0, n);
 }
 
-/* ---------------- Logika Petty Cash Canvassing ---------------- */
+/* ---------------- Logika Canvassing ---------------- */
 function tripTotals(trip){
   const ditarik = trip.expenses.reduce((s,e) => s + (Number(e.keluarRek)||0), 0);
 
@@ -595,10 +658,9 @@ function renderDashboard(){
           ${MONTHS.map(m => `<option value="${m}" ${m===state.filterMonth?'selected':''}>${m}</option>`).join('')}
         </select>
       </div>
-      <div class="mtg-filter-note">Seluruh kartu, grafik, dan tabel di bawah otomatis mengikuti filter ini.</div>
+      <div class="mtg-filter-note">Seluruh kartu, grafik, dan tabel otomatis mengikuti filter ini.</div>
     </div>
 
-    <!-- 4 KARTU KPI UTAMA -->
     <div class="mtg-kpi-grid">
       <div class="mtg-kpi-card selisih">
         <div class="mtg-kpi-label">Saldo Awal Periode</div>
@@ -688,7 +750,7 @@ function drawDashboardCharts(trend, klas, retries = 0){
     if (retries < 20) {
       setTimeout(() => drawDashboardCharts(trend, klas, retries + 1), 250);
     } else {
-      const errHtml = '<div style="color:var(--rust); padding:20px; font-size:12px; border:1px dashed var(--rust); border-radius:8px; text-align:center; width:100%;"><b>Error:</b> Pustaka grafik gagal diunduh.<br>Cek koneksi internet.</div>';
+      const errHtml = '<div style="color:var(--rust); padding:20px; font-size:12px; border:1px dashed var(--rust); border-radius:8px; text-align:center; width:100%;"><b>Error:</b> Pustaka grafik gagal diunduh.</div>';
       ['boxTrendBar', 'boxTrendLine', 'boxKlasPie', 'boxKlasBar'].forEach(id => {
          const el = document.getElementById(id);
          if(el) el.innerHTML = errHtml;
@@ -755,7 +817,6 @@ function drawDashboardCharts(trend, klas, retries = 0){
 /* ---------------- Render: Ledger ---------------- */
 function renderLedger(){
   const withBal = ledgerWithBalance().slice().reverse();
-  const editing = state.editingTxnId;
 
   const html = `
     <div class="mtg-toolbar">
@@ -938,7 +999,7 @@ function drawTripCompareChart(totalsAll, retries = 0){
       setTimeout(() => drawTripCompareChart(totalsAll, retries + 1), 250);
     } else {
        const el = document.getElementById('boxTripCompare');
-       if(el) el.innerHTML = '<div style="color:var(--rust); padding:20px; font-size:12px; border:1px dashed var(--rust); border-radius:8px; text-align:center; width:100%;"><b>Error:</b> Pustaka grafik gagal diunduh.<br>Cek koneksi internet.</div>';
+       if(el) el.innerHTML = '<div style="color:var(--rust); padding:20px; font-size:12px; border:1px dashed var(--rust); border-radius:8px; text-align:center; width:100%;"><b>Error:</b> Pustaka grafik gagal diunduh.</div>';
     }
     return;
   }
@@ -978,9 +1039,9 @@ function renderTripDetail(){
           <div style="font-size:12px;color:var(--ink-faint);">${escapeHtml(trip.periode)}</div>
         </div>
         <div style="display:flex;gap:8px;">
-          <button class="mtg-btn mtg-btn-gold mtg-btn-sm" id="btnDownloadPdf">⬇ Download PDF</button>
-          <button class="mtg-btn mtg-btn-ghost mtg-btn-sm" id="btnEditTripInfo">✎ Edit Info Trip</button>
-          <button class="mtg-btn mtg-btn-danger mtg-btn-sm" id="btnDelTrip">🗑 Hapus Trip</button>
+          <button class="mtg-btn mtg-btn-gold mtg-btn-sm" id="btnDownloadPdf">⬇ PDF</button>
+          <button class="mtg-btn mtg-btn-ghost mtg-btn-sm" id="btnEditTripInfo">✎ Edit</button>
+          <button class="mtg-btn mtg-btn-danger mtg-btn-sm" id="btnDelTrip">🗑 Hapus</button>
         </div>
       </div>
       <div id="tripInfoFormSlot"></div>
@@ -988,7 +1049,7 @@ function renderTripDetail(){
       <div class="mtg-summary-strip">
         <div class="mtg-summary-box"><div class="lbl">Tarik Tunai (Cash Pool)</div><div class="val mono">${fmtRp(tot.ditarik)}</div></div>
         <div class="mtg-summary-box"><div class="lbl">Realisasi Cash</div><div class="val mono">${fmtRp(tot.realisasiCash)}</div></div>
-        <div class="mtg-summary-box"><div class="lbl">Sisa Cash di Tangan (${(tot.pct*100).toFixed(0)}%)</div><div class="val mono ${tot.sisaCash<0?'neg':''}">${fmtRp(tot.sisaCash)}</div></div>
+        <div class="mtg-summary-box"><div class="lbl">Sisa Cash (${(tot.pct*100).toFixed(0)}%)</div><div class="val mono ${tot.sisaCash<0?'neg':''}">${fmtRp(tot.sisaCash)}</div></div>
         <div class="mtg-summary-box"><div class="lbl">Realisasi BCA & Flazz</div><div class="val mono">${fmtRp(tot.realisasiNonCash)}</div></div>
         <div class="mtg-summary-box highlight"><div class="lbl" style="color:var(--navy);">Total Pengeluaran Full</div><div class="val mono">${fmtRp(tot.totalRealisasi)}</div></div>
       </div>
@@ -1160,7 +1221,7 @@ function confirmAndDeleteExpense(trip, expId){
   });
 }
 
-/* ---------------- PDF export per trip ---------------- */
+/* ---------------- PDF export ---------------- */
 function generateTripPDF(trip){
   try{
     if(!window.jspdf || !window.jspdf.jsPDF){
@@ -1310,10 +1371,23 @@ function render(){
 
 async function init(){
   await loadData();
-  syncCanvassingToLedger(); 
   const years = availableYears();
   state.filterYear = years[years.length-1] || new Date().getFullYear();
   render();
+
+  // Event Manual Refresh Button
+  const refreshBtn = document.getElementById('btnManualRefresh');
+  if(refreshBtn) {
+    refreshBtn.addEventListener('click', () => loadData(false));
+  }
+
+  // AUTO-POLLING: Cek data dari Google Sheets setiap 15 detik secara background
+  setInterval(() => {
+    // Jangan overwrite jika user sedang dalam posisi mengedit formulir
+    if (!state.editingTxnId && !state.editingTripExpenseId && !state.isSyncing) {
+      loadData(true);
+    }
+  }, 15000);
 }
 
 if (document.readyState === 'loading') {
@@ -1324,3 +1398,5 @@ if (document.readyState === 'loading') {
 
 })();
 </script>
+</body>
+</html>
