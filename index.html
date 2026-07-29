@@ -354,7 +354,8 @@ let state = {
   activeTripId: null,
   editingTxnId: null,
   editingTripExpenseId: null,
-  isSyncing: false
+  isSyncing: false,
+  lastRawData: null // Variabel untuk menyimpan hash/string data terakhir dari server
 };
 
 let chartRegistry = {};
@@ -397,7 +398,17 @@ async function loadData(silent = false){
   try {
     const res = await fetch(SHEET_API_URL + "?t=" + Date.now());
     if (!res.ok) throw new Error("Status: " + res.status);
-    const data = await res.json();
+    
+    // Ambil data dalam bentuk raw text untuk dibandingkan
+    const rawText = await res.text();
+    
+    // CEK PERUBAHAN DATA: Jika data dari server sama persis dengan yang ada di browser, BATALKAN RE-RENDER.
+    if(silent && state.lastRawData === rawText){
+       setCloudStatus('ok');
+       return; 
+    }
+    state.lastRawData = rawText;
+    const data = JSON.parse(rawText);
     
     state.ledger = (data.ledger && data.ledger.length > 0) ? data.ledger : SEED_DATA.ledger.map(d => ({ id: uid(), ...d }));
     state.trips = (data.trips && data.trips.length > 0) ? data.trips : SEED_DATA.trips.map(tr => ({
@@ -406,7 +417,20 @@ async function loadData(silent = false){
     }));
 
     syncCanvassingToLedger();
+    
+    // SCROLL MEMORY: Simpan posisi scroll window & tabel agar layar tidak melompat setelah update
+    const windowScrollY = window.scrollY;
+    const scrollableDivs = Array.from(document.querySelectorAll('.mtg-table-scroll')).map(el => el.scrollTop);
+
     render();
+
+    // RESTORE SCROLL
+    window.scrollTo(0, windowScrollY);
+    const newScrollableDivs = document.querySelectorAll('.mtg-table-scroll');
+    scrollableDivs.forEach((st, i) => {
+      if(newScrollableDivs[i]) newScrollableDivs[i].scrollTop = st;
+    });
+
     setCloudStatus('ok');
   } catch(e) {
     console.warn("Koneksi ke Google Sheets terhalang. Memuat data cadangan...", e);
@@ -1599,11 +1623,12 @@ async function init(){
     refreshBtn.addEventListener('click', () => loadData(false));
   }
 
+  // AUTO POLLING DIPERPANJANG MENJADI 25 DETIK (Agar tidak agresif melompat)
   setInterval(() => {
     if (!state.editingTxnId && !state.editingTripExpenseId && !state.isSyncing) {
       loadData(true);
     }
-  }, 15000);
+  }, 25000); 
 }
 
 if (document.readyState === 'loading') {
